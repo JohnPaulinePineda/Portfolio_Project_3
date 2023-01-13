@@ -1,0 +1,829 @@
+---
+title: "R : Treatment Comparison Tests Between a Single Factor Variable (2-Level)   and a Single Response Variable (Numeric)"
+author: "John Pauline Pineda"
+date: "April 26, 2022"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 3
+    theme: readable
+    highlight: tango
+    css: doc.css
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.width=15, fig.height=10)
+```
+# **1. Table of Contents**
+|
+| This document presents a non-exhaustive list of various treatment comparison tests between two groups with ordinal response variable using various helpful packages in <mark style="background-color: #CCECFF">**R**</mark>.    
+|
+##  1.1 Sample Data
+|
+| The <mark style="background-color: #EEEEEE;color: #FF0000">**DBP**</mark> dataset from the book  <mark style="background-color: #CCECFF">**Clinical Trial Data Analysis Using R and SAS**</mark> was used for this illustrated example.
+|
+| Preliminary dataset assessment:
+|
+| **[A]** 40 Rows (observations composed of subjects enrolled in the study)
+|
+| **[B]** 8 Columns (variables)
+|      **[B.1]** 1/8 Factor variable = <span style="color: #FF0000">TRT</span> (factor)
+|           **[B.1.1]** <span style="color: #FF0000">Placebo</span> = placebo drug treatment
+|           **[B.1.2]** <span style="color: #FF0000">New</span> = new drug treatment
+|      **[B.2]** 5/8 Response variables = <span style="color: #FF0000">DBP1</span>, <span style="color: #FF0000">DBP2</span>, <span style="color: #FF0000">DBP3</span>, <span style="color: #FF0000">DBP4</span>, <span style="color: #FF0000">DBP5</span> (numeric)
+|           **[B.2.1]** <span style="color: #FF0000">DBP1</span> = diastolic blood pressure baseline measurement made on the 1st month
+|           **[B.2.2]** <span style="color: #FF0000">DBP2</span> = diastolic blood pressure measurement made on the 2nd month
+|           **[B.2.3]** <span style="color: #FF0000">DBP3</span> = diastolic blood pressure measurement made on the 3rd month
+|           **[B.2.4]** <span style="color: #FF0000">DBP4</span> = diastolic blood pressure measurement made on the 4th month
+|           **[B.2.5]** <span style="color: #FF0000">DBP5</span> = diastolic blood pressure measurement made on the 5th month
+|      **[B.3]** 1/8 Covariate variable = <span style="color: #FF0000">Age</span> (numeric)
+|      **[B.4]** 1/8 Covariate variable = <span style="color: #FF0000">Sex</span> (factor)
+|           **[B.4.1]** <span style="color: #FF0000">M</span> = male study participant
+|           **[B.4.2]** <span style="color: #FF0000">F</span> = female study participant
+|
+```{r section_1.1, warning=FALSE, message=FALSE}
+##################################
+# Loading R libraries
+##################################
+library(moments)
+library(car)
+library(multcomp)
+library(effects)
+library(psych)
+library(ggplot2)
+library(dplyr)
+library(ggpubr)
+library(rstatix)
+library(ggfortify)
+library(trend)
+
+##################################
+# Setting the working directory
+##################################
+setwd("D:/R_Codes/Markdown/ClinicalTrialDataAnalysis")
+
+##################################
+# Reading and creating the complete dataset
+##################################
+DBP.Complete <- read.csv('DBP.csv',
+                na.strings=c("NA","NaN"," ",""),
+                stringsAsFactors = T)
+
+##################################
+# Performing a general exploration of the dataset
+##################################
+dim(DBP.Complete)
+str(DBP.Complete)
+summary(DBP.Complete)
+
+##################################
+# Renaming the treatment categories to more verbose labels
+##################################
+DBP.Complete$TRT <- ifelse(DBP.Complete$TRT=="A","New","Placebo")
+
+##################################
+# Setting the levels for the treatment categories
+##################################
+DBP.Complete$TRT <- factor(DBP.Complete$TRT,
+                           levels = c("Placebo","New"))
+
+##################################
+# Creating an analysis dataset without the subject information column
+##################################
+DBP.Analysis <- DBP.Complete[,-1]
+
+##################################
+# Creating a response-covariate dataset without the treatment column
+##################################
+DBP.Response.Covariate <- DBP.Analysis[,-1]
+
+##################################
+# Formulating a data type assessment summary
+##################################
+PDA <- DBP.Response.Covariate
+(PDA.Summary <- data.frame(
+  Column.Index=c(1:length(names(PDA))),
+  Column.Name= names(PDA), 
+  Column.Type=sapply(PDA, function(x) class(x)), 
+  row.names=NULL)
+)
+
+```
+
+##  1.2 Data Quality Assessment
+|
+| Data quality assessment:
+|
+| **[A]** No missing observations noted for any response and covariate variable.
+|
+| **[B]** No low variance (Unique.Count.Ratio<0.01 or First.Second.Mode.Ratio>5) noted for any response variable.
+|
+| **[C]** No high skewness (Skewness>3 or Skewness<(-3)) noted for any response variable.
+|
+```{r section_1.2, warning=FALSE, message=FALSE}
+##################################
+# Restoring the working directory
+##################################
+setwd("D:/R_Codes/Markdown/ClinicalTrialDataAnalysis")
+
+##################################
+# Reusing the response-covariate dataset
+##################################
+DQA <- DBP.Response.Covariate
+
+##################################
+# Formulating a data subset of response variables (numeric)
+##################################
+DQA.Variables.Response <- DQA[,names(DQA) %in% c("DBP1","DBP2","DBP3","DBP4","DBP5")]
+
+##################################
+# Formulating a data subset of covariate variables (numeric)
+##################################
+DQA.Variables.Covariate.Numeric <- DQA$Age
+
+##################################
+# Formulating a data subset of covariate variables (factor)
+##################################
+DQA.Variables.Covariate.Factor <- DQA$Sex
+
+##################################
+# Formulating an overall data quality assessment summary
+##################################
+(DQA.Summary <- data.frame(
+  Column.Index=c(1:length(names(DQA))),
+  Column.Name= names(DQA), 
+  Column.Type=sapply(DQA, function(x) class(x)), 
+  Row.Count=sapply(DQA, function(x) nrow(DQA)),
+  NA.Count=sapply(DQA,function(x)sum(is.na(x))),
+  Fill.Rate=sapply(DQA,function(x)format(round((sum(!is.na(x))/nrow(DQA)),3),nsmall=3)),
+  row.names=NULL)
+)
+
+##################################
+# Checking for missing observations
+##################################
+if ((nrow(DQA.Summary[DQA.Summary$NA.Count>0,]))>0){
+  print(paste0("Missing observations noted for ",
+               (nrow(DQA.Summary[DQA.Summary$NA.Count>0,])),
+               " variable(s) with NA.Count>0 and Fill.Rate<1.0."))
+  DQA.Summary[DQA.Summary$NA.Count>0,]
+} else {
+  print("No missing observations noted.")
+}
+
+##################################
+# Formulating a data quality assessment summary for response variables (numeric)
+##################################
+
+if (length(names(DQA.Variables.Response))>0) {
+  
+  ##################################
+  # Formulating a function to determine the first mode
+  ##################################
+  FirstModes <- function(x) {
+    ux <- unique(na.omit(x))
+    tab <- tabulate(match(x, ux))
+    ux[tab == max(tab)]
+  }
+
+  ##################################
+  # Formulating a function to determine the second mode
+  ##################################
+  SecondModes <- function(x) {
+    ux <- unique(na.omit(x))
+    tab <- tabulate(match(x, ux))
+    fm = ux[tab == max(tab)]
+    sm = na.omit(x)[!(na.omit(x) %in% fm)]
+    usm <- unique(sm)
+    tabsm <- tabulate(match(sm, usm))
+    usm[tabsm == max(tabsm)]
+  }
+  
+  (DQA.Variables.Response.Summary <- data.frame(
+  Column.Name= names(DQA.Variables.Response), 
+  Column.Type=sapply(DQA.Variables.Response, function(x) class(x)), 
+  Unique.Count=sapply(DQA.Variables.Response, function(x) length(unique(x))),
+  Unique.Count.Ratio=sapply(DQA.Variables.Response, function(x) format(round((length(unique(x))/nrow(DQA.Variables.Response)),3), nsmall=3)),
+  First.Mode.Value=sapply(DQA.Variables.Response, function(x) format(round((FirstModes(x)[1]),3),nsmall=3)),
+  Second.Mode.Value=sapply(DQA.Variables.Response, function(x) format(round((SecondModes(x)[1]),3),nsmall=3)),
+  First.Mode.Count=sapply(DQA.Variables.Response, function(x) sum(na.omit(x) == FirstModes(x)[1])),
+  Second.Mode.Count=sapply(DQA.Variables.Response, function(x) sum(na.omit(x) == SecondModes(x)[1])),
+  First.Second.Mode.Ratio=sapply(DQA.Variables.Response, function(x) format(round((sum(na.omit(x) == FirstModes(x)[1])/sum(na.omit(x) == SecondModes(x)[1])),3), nsmall=3)),
+  Minimum=sapply(DQA.Variables.Response, function(x) format(round(min(x,na.rm = TRUE),3), nsmall=3)),
+  Mean=sapply(DQA.Variables.Response, function(x) format(round(mean(x,na.rm = TRUE),3), nsmall=3)),
+  Median=sapply(DQA.Variables.Response, function(x) format(round(median(x,na.rm = TRUE),3), nsmall=3)),
+  Maximum=sapply(DQA.Variables.Response, function(x) format(round(max(x,na.rm = TRUE),3), nsmall=3)),
+  Skewness=sapply(DQA.Variables.Response, function(x) format(round(skewness(x,na.rm = TRUE),3), nsmall=3)),
+  Kurtosis=sapply(DQA.Variables.Response, function(x) format(round(kurtosis(x,na.rm = TRUE),3), nsmall=3)),
+  Percentile25th=sapply(DQA.Variables.Response, function(x) format(round(quantile(x,probs=0.25,na.rm = TRUE),3), nsmall=3)),
+  Percentile75th=sapply(DQA.Variables.Response, function(x) format(round(quantile(x,probs=0.75,na.rm = TRUE),3), nsmall=3)),
+  row.names=NULL)
+  )  
+  
+}
+
+##################################
+# Identifying potential data quality issues for response variables (numeric) 
+##################################
+
+##################################
+# Checking for zero or near-zero variance predictors
+##################################
+if (length(names(DQA.Variables.Response))==0) {
+  print("No numeric predictors noted.")
+} else if (nrow(DQA.Variables.Response.Summary[as.numeric(as.character(DQA.Variables.Response.Summary$First.Second.Mode.Ratio))>5,])>0){
+  print(paste0("Low variance observed for ",
+               (nrow(DQA.Variables.Response.Summary[as.numeric(as.character(DQA.Variables.Response.Summary$First.Second.Mode.Ratio))>5,])),
+               " numeric variable(s) with First.Second.Mode.Ratio>5."))
+  DQA.Variables.Response.Summary[as.numeric(as.character(DQA.Variables.Response.Summary$First.Second.Mode.Ratio))>5,]
+} else {
+  print("No low variance numeric predictors due to high first-second mode ratio noted.")
+}
+
+if (length(names(DQA.Variables.Response))==0) {
+  print("No numeric predictors noted.")
+} else if (nrow(DQA.Variables.Response.Summary[as.numeric(as.character(DQA.Variables.Response.Summary$Unique.Count.Ratio))<0.01,])>0){
+  print(paste0("Low variance observed for ",
+               (nrow(DQA.Variables.Response.Summary[as.numeric(as.character(DQA.Variables.Response.Summary$Unique.Count.Ratio))<0.01,])),
+               " numeric variable(s) with Unique.Count.Ratio<0.01."))
+  DQA.Variables.Response.Summary[as.numeric(as.character(DQA.Variables.Response.Summary$Unique.Count.Ratio))<0.01,]
+} else {
+  print("No low variance numeric predictors due to low unique count ratio noted.")
+}
+
+##################################
+# Checking for skewed response variables
+##################################
+if (length(names(DQA.Variables.Response))==0) {
+  print("No response variables noted.")
+} else if (nrow(DQA.Variables.Response.Summary[as.numeric(as.character(DQA.Variables.Response.Summary$Skewness))>3 |
+                                               as.numeric(as.character(DQA.Variables.Response.Summary$Skewness))<(-3),])>0){
+  print(paste0("High skewness observed for ",
+  (nrow(DQA.Variables.Response.Summary[as.numeric(as.character(DQA.Variables.Response.Summary$Skewness))>3 |
+                                               as.numeric(as.character(DQA.Variables.Response.Summary$Skewness))<(-3),])),
+  " response variable(s) with Skewness>3 or Skewness<(-3)."))
+  DQA.Variables.Response.Summary[as.numeric(as.character(DQA.Variables.Response.Summary$Skewness))>3 |
+                                 as.numeric(as.character(DQA.Variables.Response.Summary$Skewness))<(-3),]
+} else {
+  print("No skewed response variables noted.")
+}
+
+```
+
+##  1.3 Research Question
+|
+| Using the <mark style="background-color: #EEEEEE;color: #FF0000">**DBP**</mark> dataset, treatment comparison tests will be conducted to investigate the following :
+|
+| **[A]** Research Question : Do changes in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) differ between treatment groups <span style="color: #FF0000">New</span> and <span style="color: #FF0000">Placebo</span>?
+|      **[A.1]** Factor variable = <span style="color: #FF0000">TRT</span>
+|           **[A.1.1]** <span style="color: #FF0000">Placebo</span> = placebo drug treatment
+|           **[A.1.2]** <span style="color: #FF0000">New</span> = new drug treatment
+|      **[A.2]** Response variable = <span style="color: #FF0000">DBP5-DBP1</span>
+|
+##  1.4 Sample Size and Power Computation
+|
+| Given that the <mark style="background-color: #EEEEEE;color: #FF0000">**DBP**</mark> dataset used 20 study subjects for each treatment group <span style="color: #FF0000">TRT=New</span> (new drug) and <span style="color: #FF0000">TRT=Placebo</span> (placebo drug). The following parameters might have been used for determining the appropriate sample size prior to the study :
+| **[A (Mean of Treatment Group)]** Mean change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) for the treatment group <span style="color: #FF0000">TRT=New</span> (new drug) was hypothesized to be -5.0 (indicating a decrease in diastolic blood pressure).
+| **[B (Mean of Control Group)]** Mean change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) for the treatment group <span style="color: #FF0000">TRT=Placebo</span> (new drug) was hypothesized to be 0.0 (indicating no change in diastolic blood pressure).
+| **[C (Measurement Standard Deviation)]** Standard deviation of the change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) was hypothesized to be 5.0.
+| **[D (Effect Size)]** Effect size using Cohen's D was hypothesized to be 1.0 (large magnitude).
+| **[E. (Type I Error = Alpha)]** Type I error (difference between treatment groups is concluded when there is no actual difference) was hypothesized to be 5% .
+| **[F. Type II Error= Beta]** Type II error (no difference between treatment groups is concluded when there is an actual difference) was hypothesized to be 20% . Power of the test was hypothesized to be 80%.
+|
+```{r section_1.4, warning=FALSE, message=FALSE, fig.width=15, fig.height=8, fig.align="center"}
+##################################
+# Determining sample sizes
+##################################
+
+##################################
+# Defining the range of possible effect sizes
+##################################
+
+##################################
+# Defining a range of possible hypothesized values for the treatment mean
+##################################
+mu_Treatment=c(-15,-14,-13,-12,-11,-10,-9,-8,-7,-6,-5,-4,-3)
+
+##################################
+# Defining a fixed hypothesized value for the control mean
+##################################
+mu_Control=0
+
+##################################
+# Defining a fixed hypothesized value for the sample size ratio between the treatment and control groups
+##################################
+kappa=1
+
+##################################
+# Defining a fixed hypothesized value for the standard deviation
+##################################
+sd=5
+
+##################################
+# Defining a fixed hypothesized value for the Type I error
+##################################
+alpha=0.05
+
+##################################
+# Defining a range of possible hypothesized values for the Type I error
+##################################
+beta=c(0.30,0.20,0.10)
+
+##################################
+# Computing the range of samples sizes based on different levels type II error
+##################################
+
+beta_1=beta[1]
+(nB_Beta30=(1+1/kappa)*(sd*(qnorm(1-alpha/2)+qnorm(1-beta_1))/(mu_Treatment-mu_Control))^2)
+ceiling(nB_Beta30)
+z_Beta30=(mu_Treatment-mu_Control)/(sd*sqrt((1+1/kappa)/nB_Beta30))
+(Power_Beta30=pnorm(z_Beta30-qnorm(1-alpha/2))+pnorm(-z_Beta30-qnorm(1-alpha/2)))
+
+beta_2=beta[2]
+(nB_Beta20=(1+1/kappa)*(sd*(qnorm(1-alpha/2)+qnorm(1-beta_2))/(mu_Treatment-mu_Control))^2)
+ceiling(nB_Beta20)
+z_Beta20=(mu_Treatment-mu_Control)/(sd*sqrt((1+1/kappa)/nB_Beta20))
+(Power_Beta20=pnorm(z_Beta20-qnorm(1-alpha/2))+pnorm(-z_Beta20-qnorm(1-alpha/2)))
+
+beta_3=beta[3]
+(nB_Beta10=(1+1/kappa)*(sd*(qnorm(1-alpha/2)+qnorm(1-beta_3))/(mu_Treatment-mu_Control))^2)
+ceiling(nB_Beta10)
+z_Beta10=(mu_Treatment-mu_Control)/(sd*sqrt((1+1/kappa)/nB_Beta10))
+(Power_Beta10=pnorm(z_Beta10-qnorm(1-alpha/2))+pnorm(-z_Beta10-qnorm(1-alpha/2)))
+
+SampleSizePowerCurve <- as.data.frame(cbind(mu_Treatment,nB_Beta30,nB_Beta20,nB_Beta10))
+names(SampleSizePowerCurve) <- c("DBP5.DBP1.Difference","Power=70%","Power=80%","Power=90%")
+
+##################################
+# Restructuring the data
+##################################
+SampleSizePowerCurve.Reshaped <- gather(SampleSizePowerCurve,"Power=70%","Power=80%","Power=90%",
+                                 key="Power", 
+                                 value="Sample.Size")
+
+##################################
+# Plotting the sample size and power curve
+##################################
+(DBP5DBP1Difference.SampleSize.LinePlot.ByPower <- ggplot(SampleSizePowerCurve.Reshaped,aes(x=DBP5.DBP1.Difference,
+                                                                                            y=Sample.Size, 
+                                                                                            color=Power)) +
+  geom_line(size=1)+
+  geom_point(size=4)+
+  theme_bw() +
+  scale_color_brewer(palette="Paired") +
+  scale_x_continuous(name="Hypothesized Diastolic Blood Pressure Change (DBP5-DBP1) for Treatment Group",limits=c(-15,-3),breaks=seq(-15,-3,by=1)) +
+  scale_y_continuous(name="Sample Size for Each Treatment Group",limits=c(0,80),breaks=seq(0,80,by=10)) +
+  theme(axis.title.x=element_text(color="black",face="bold",size=20),
+        legend.position="top",
+        legend.key.size = unit(1,"cm"),
+        legend.key.height = unit(1,"cm"), 
+        legend.key.width = unit(1,"cm"),
+        legend.title = element_text(size=20,face="bold"), 
+        legend.text = element_text(size=20,face="bold"),
+        text=element_text(size=15),
+        axis.text.y=element_text(color="black",face="bold",hjust=0.25,size=20),
+        axis.text.x=element_text(color="black",face="bold",size=20),
+        axis.title.y=element_text(color="black",face="bold",size=20),
+        axis.ticks.length=unit(0.25,"cm"),
+        plot.title=element_text(color="black",size=35,face="bold",hjust=0.50)) +
+  ggtitle("Sample Size Calculations for Different Power and Effect Size"))
+
+```
+
+
+## 1.5 Data Exploration
+|
+| Differential boxplot analysis of the response variable <span style="color: #FF0000">DBP5-DBP1</span> by factor variable <span style="color: #FF0000">TRT</span> showed that :
+|
+| **[A]** Higher change in diastolic blood pressure measurements between the 1st and 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) observed for <span style="color: #FF0000">TRT=New</span> (new drug) as compared to <span style="color: #FF0000">TRT=Placebo</span> (placebo drug).
+|
+| **[B]** The change in diastolic blood pressure measurements between the 1st and 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) was observed to follow a generally normal distribution for both <span style="color: #FF0000">TRT=New</span> (new drug) and <span style="color: #FF0000">TRT=Placebo</span> (placebo drug).
+|
+| **[C]** Minimal outliers observed for both <span style="color: #FF0000">TRT=New</span> (new drug) and <span style="color: #FF0000">TRT=Placebo</span> (placebo drug).
+|
+```{r section_1.5, warning=FALSE, message=FALSE, fig.width=15, fig.height=8, fig.align="center"}
+##################################
+# Reusing the dataset
+##################################
+head(DBP.Analysis)
+
+##################################
+# Creating the DBP5.DBP1.Difference column
+##################################
+DBP.Analysis$DBP5.DBP1.Difference <- DBP.Analysis$DBP5-DBP.Analysis$DBP1
+
+##################################
+# Printing a subset of the updated dataset
+##################################
+head(DBP.Analysis)
+
+##################################
+# Determining the max and min values for the DBP5.DBP1.Difference column
+##################################
+max(DBP.Analysis$DBP5.DBP1.Difference)
+min(DBP.Analysis$DBP5.DBP1.Difference)
+
+##################################
+# Performing exploratory data analysis
+##################################
+(DBP5DBP1Difference.ViolinBoxplot.ByTreatment <- ggplot(DBP.Analysis,aes(x=TRT,y=DBP5.DBP1.Difference,color=TRT)) +
+  geom_violin(scale="width", trim=FALSE) +
+  stat_boxplot(geom="errorbar",lwd=2) +
+  geom_boxplot(lwd=2, outlier.size=3, width=0.4) +
+  theme_bw() +
+  scale_fill_manual(values=c("#3259A0","#FF5050")) +
+  scale_color_manual(values=c("#3259A0","#FF5050")) +
+  scale_x_discrete(name="Treatment (TRT)", limits=c("Placebo","New")) +
+  scale_y_continuous(name="Diastolic Blood Pressure Change (DBP5-DBP1)",limits=c(-25,5),breaks=seq(-25,5,by=5)) +
+  theme(axis.title.x=element_text(color="black",face="bold",size=20),
+        legend.position="top",
+        legend.key.size = unit(1,"cm"),
+        legend.key.height = unit(1,"cm"), 
+        legend.key.width = unit(1,"cm"),
+        legend.title = element_text(size=20,face="bold"), 
+        legend.text = element_text(size=20,face="bold"),
+        text=element_text(size=15),
+        axis.text.y=element_text(color="black",face="bold",hjust=0.25,size=20),
+        axis.text.x=element_text(color="black",face="bold",size=20),
+        axis.title.y=element_text(color="black",face="bold",size=20),
+        axis.ticks.length=unit(0.25,"cm"),
+        plot.title=element_text(color="black",size=35,face="bold",hjust=0.50)) +
+   stat_summary(fun=mean, geom="line",color="black",size=2,aes(group=1)) +
+   stat_summary(fun=mean, geom="point",color="black",size=5) +
+  ggtitle("Data Exploration Between Treatment Groups"))
+
+##################################
+# Computing summary statistics
+##################################
+DBP.Analysis.SummaryStatistics <- DBP.Analysis %>% 
+  group_by(TRT) %>%
+  get_summary_stats(DBP5.DBP1.Difference, show = c("mean", "sd", "median", "q1", "q3", "iqr"))
+
+(as.data.frame(DBP.Analysis.SummaryStatistics))
+
+```
+
+## 1.6 Evaluation of Important Statistical Assumptions
+|
+| Evaluating various statistical assumptions showed that :
+|
+| **[A]** Assumptions dependent on the nature of the data.
+|      **[A.1] Assumption 1: Continuous response variable.** Response variable <span style="color: #FF0000">DBP5-DBP1</span> is numeric. No violation.  
+|      **[A.2] Assumption 2: Two-level factor variable.** Factor variable = <span style="color: #FF0000">TRT</span> contains two levels <span style="color: #FF0000">TRT=New</span> (new drug) and <span style="color: #FF0000">TRT=Placebo</span> (placebo drug). No violation.
+|      **[A.3] Assumption 3: Independent observations.** Each patient belonged to only one group and there was no relationship noted between patients in each treatment group <span style="color: #FF0000">TRT=New</span> (new drug) and <span style="color: #FF0000">TRT=Placebo</span> (placebo drug). No violation.
+|      **[A.4] Assumption 4: Adequate sample size.** Experimental size was assumed to have been effectively computed based from the standard deviation, significance, power, and effect size deemed appropriate for the study. No violation.  
+|
+| **[B]** Assumptions dependent on preliminary testing of the data.
+|      **[B.1] Assumption 5: No univariate outliers.** While 2 outliers were previously detected for each treatment group <span style="color: #FF0000">TRT=New</span> (new drug) and <span style="color: #FF0000">TRT=Placebo</span> (placebo drug), no extreme outliers were observed. No violation.
+|      **[B.2] Assumption 6: Univariate normality.** From the results of the Shapiro-Wilk's test, the determined p-values were greater than the significance level 0.05 indicating that the distribution of the data for both treatment groups <span style="color: #FF0000">TRT=New</span> (new drug) and <span style="color: #FF0000">TRT=Placebo</span> (placebo drug) were not significantly different from the normal distribution. The QQ-Plot (which draws the correlation between the given data and the normal distribution) showed all points falling approximately along the reference line for both groups. No violation.
+|      **[B.3] Assumption 7: Homogeneity of variance.** From the results of the Levene's test, the determined p-value was greater than the significance level 0.05 indicating that there was no significant difference between the variances of both treatment groups <span style="color: #FF0000">TRT=New</span> (new drug) and <span style="color: #FF0000">TRT=Placebo</span> (placebo drug). No violation.
+|
+```{r section_1.6, warning=FALSE, message=FALSE, fig.width=15, fig.height=8, fig.align="center"}
+##################################
+# Reusing the dataset
+##################################
+head(DBP.Analysis)
+
+##################################
+# Identifying extreme outliers
+##################################
+DBP.Analysis.ExtremeOutliers <- DBP.Analysis %>%
+  group_by(TRT) %>%
+  identify_outliers(DBP5.DBP1.Difference)
+
+(as.data.frame(DBP.Analysis.ExtremeOutliers))
+
+##################################
+# Check normality of data distribution
+##################################
+DBP.Analysis.DistributionalNormality <- DBP.Analysis %>%
+  group_by(TRT) %>%
+  shapiro_test(DBP5.DBP1.Difference)
+
+(as.data.frame(DBP.Analysis.DistributionalNormality))
+
+##################################
+# Formulating the QQ-Plot
+##################################
+ggqqplot(DBP.Analysis,x="DBP5.DBP1.Difference",color="TRT",facet.by="TRT") +
+  theme_bw() +
+  scale_fill_manual(values=c("#3259A0","#FF5050")) +
+  scale_color_manual(values=c("#3259A0","#FF5050")) +
+  scale_y_continuous(name="Observed (DBP5-DBP1)") +
+  scale_x_continuous(name="Expected Normal (DBP5-DBP1)") +
+  theme(axis.title.x=element_text(color="black",face="bold",size=20),
+        legend.position="top",
+        legend.key.size = unit(1,"cm"),
+        legend.key.height = unit(1,"cm"), 
+        legend.key.width = unit(1,"cm"),
+        legend.title = element_text(size=20,face="bold"), 
+        legend.text = element_text(size=20,face="bold"),
+        text=element_text(size=15),
+        axis.text.y=element_text(color="black",face="bold",hjust=0.25,size=20),
+        axis.text.x=element_text(color="black",face="bold",size=20),
+        axis.title.y=element_text(color="black",face="bold",size=20),
+        axis.ticks.length=unit(0.25,"cm"),
+        plot.title=element_text(color="black",size=35,face="bold",hjust=0.50),
+        strip.text = element_text(color="black",face="bold",size=20)) +
+  ggtitle("QQ-Plot for Normality Assumption Evaluation")
+
+##################################
+# Checking the equality of variances
+##################################
+DBP.Analysis.VarianceEquality <- DBP.Analysis %>% 
+  levene_test(DBP5.DBP1.Difference~TRT)
+
+(as.data.frame(DBP.Analysis.VarianceEquality))
+
+```
+## 1.7 Statistical Tests for Treatment Comparison Between a Single Factor Variable (2-Level) and a Single Response Variable (Numeric) 
+|
+| **[A]** Student's T-Test can be applied on the dataset considering that no statistical assumptions have been violated.
+|      **[A.1] Assumption 1: Continuous response variable.** No violation.  
+|      **[A.2] Assumption 2: Two-level factor variable.** No violation.
+|      **[A.3] Assumption 3: Independent observations.** No violation.
+|      **[A.4] Assumption 4: Adequate sample size.** No violation.
+|      **[A.5] Assumption 5: No univariate outliers.** No violation.
+|      **[A.6] Assumption 6: Univariate normality.** No violation.
+|      **[A.7] Assumption 7: Homogeneity of variance.** No violation.
+| **[B]** For comparison, Welch T-Test will be applied on the dataset which is the appropriate test in cases when the assumption on homogeneity of variance is violated.
+| **[B]** For comparison, Wilcoxon Rank-Sum Test will be applied on the dataset which is the appropriate test in cases when the assumption on univariate normality is violated.
+| **[B]** For comparison, Robust Rank-Order Test will be applied on the dataset which is the appropriate test in cases when the assumptions on univariate normality and homogeneity of variance are both violated.
+
+### 1.7.1 Student's T-Test
+|
+| **[A] Study Hypothesis.**
+|      **[A.1] Null Hypothesis.** There is no difference in the mean change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) between treatment groups <span style="color: #FF0000">TRT=New</span> (new drug) and <span style="color: #FF0000">TRT=Placebo</span> (placebo drug). 
+|      **[A.2] Alternative Hypothesis.** There is a difference in the mean change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) between treatment groups <span style="color: #FF0000">TRT=New</span> (new drug) and <span style="color: #FF0000">TRT=Placebo</span> (placebo drug). 
+| **[B] Hypothesis Testing Results.** The mean change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) were -15.20 for the treatment group <span style="color: #FF0000">TRT=New</span> (new drug) and -4.80 for the treatment group <span style="color: #FF0000">TRT=Placebo</span> (placebo drug). Student's T-test showed that the difference between both treatment groups was statistically significant, t(38.00) = 12.15, p < 0.0001, n=40, effect size=3.84 (large magnitude). There is sufficient statistical evidence to reject the null hypothesis. Therefore, the mean change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) between treatment groups <span style="color: #FF0000">TRT=New</span> (new drug) and <span style="color: #FF0000">TRT=Placebo</span> (placebo drug) were different.
+|
+```{r section_1.7.1, warning=FALSE, message=FALSE, fig.width=15, fig.height=8, fig.align="center"}
+##################################
+# Reusing the dataset
+##################################
+head(DBP.Analysis)
+
+##################################
+# Conducting Student's T-Test
+##################################
+DBP.Analysis.StudentTTest <- DBP.Analysis %>%
+  t_test(DBP5.DBP1.Difference ~ TRT, var.equal = TRUE, detailed = TRUE) %>%
+  add_significance()
+
+(as.data.frame(DBP.Analysis.StudentTTest))
+
+##################################
+# Computing for the effect size
+##################################
+DBP.Analysis.StudentTTest.EffectSize <- DBP.Analysis %>%
+  cohens_d(DBP5.DBP1.Difference ~ TRT, var.equal = TRUE, hedges.correction = TRUE)
+
+(as.data.frame(DBP.Analysis.StudentTTest.EffectSize))
+
+##################################
+# Summarizing the hypothesis testing results
+##################################
+
+DBP.Analysis.StudentTTest.Statistics <- DBP.Analysis.StudentTTest %>% add_xy_position(x = "group")
+
+(DBP5DBP1Difference.ViolinBoxplot.ByTreatment <- ggplot(DBP.Analysis,aes(x=TRT,y=DBP5.DBP1.Difference,color=TRT)) +
+  geom_violin(scale="width", trim=FALSE) +
+  stat_boxplot(geom="errorbar",lwd=2) +
+  geom_boxplot(lwd=2, outlier.size=3, width=0.4) +
+  theme_bw() +
+  scale_fill_manual(values=c("#3259A0","#FF5050")) +
+  scale_color_manual(values=c("#3259A0","#FF5050")) +
+  scale_x_discrete(name="Treatment (TRT)", limits=c("Placebo","New")) +
+  scale_y_continuous(name="Diastolic Blood Pressure Change (DBP5-DBP1)",limits=c(-25,5),breaks=seq(-25,5,by=5)) +
+  theme(axis.title.x=element_text(color="black",face="bold",size=20),
+        legend.position="top",
+        legend.key.size = unit(1,"cm"),
+        legend.key.height = unit(1,"cm"), 
+        legend.key.width = unit(1,"cm"),
+        legend.title = element_text(size=20,face="bold"), 
+        legend.text = element_text(size=20,face="bold"),
+        text=element_text(size=15),
+        axis.text.y=element_text(color="black",face="bold",hjust=0.25,size=20),
+        axis.text.x=element_text(color="black",face="bold",size=20),
+        axis.title.y=element_text(color="black",face="bold",size=20),
+        axis.ticks.length=unit(0.25,"cm"),
+        plot.title=element_text(color="black",size=35,face="bold",hjust=0.50),
+        plot.subtitle = element_text(color="black",size=25,face="bold",hjust=0.50)) +
+   stat_summary(fun=mean, geom="line",color="black",size=2,aes(group=1)) +
+   stat_summary(fun=mean, geom="point",color="black",size=5) +
+  labs(subtitle = "t(38.00)=12.15, p=<0.0001, n=40, Effect Size=3.84") + 
+  ggtitle("Hypothesis Testing using Student's T-Test"))
+
+```
+
+### 1.7.2 Welch T-Test
+|
+| **[A] Study Hypothesis.**
+|      **[A.1] Null Hypothesis.** There is no difference in the mean change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) between treatment groups <span style="color: #FF0000">TRT=New</span> (new drug) and <span style="color: #FF0000">TRT=Placebo</span> (placebo drug). 
+|      **[A.2] Alternative Hypothesis.** There is a difference in the mean change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) between treatment groups <span style="color: #FF0000">TRT=New</span> (new drug) and <span style="color: #FF0000">TRT=Placebo</span> (placebo drug). 
+| **[B] Hypothesis Testing Results.** The mean change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) were -15.20 for the treatment group <span style="color: #FF0000">TRT=New</span> (new drug) and -4.80 for the treatment group <span style="color: #FF0000">TRT=Placebo</span> (placebo drug). Welch T-Test (with relaxed assumptions on Homogeneity of variance) showed that the difference between both treatment groups was statistically significant, t(36.52) = 12.15, p < 0.0001, n=40, effect size=3.84 (large magnitude). There is sufficient statistical evidence to reject the null hypothesis. Therefore, the mean change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) between treatment groups <span style="color: #FF0000">TRT=New</span> (new drug) and <span style="color: #FF0000">TRT=Placebo</span> (placebo drug) were different.
+|
+```{r section_1.7.2, warning=FALSE, message=FALSE, fig.width=15, fig.height=8, fig.align="center"}
+##################################
+# Reusing the dataset
+##################################
+head(DBP.Analysis)
+
+##################################
+# Conducting Welch T-Test
+##################################
+DBP.Analysis.WelchTTest <- DBP.Analysis %>%
+  t_test(DBP5.DBP1.Difference ~ TRT, var.equal = FALSE, detailed = TRUE) %>%
+  add_significance()
+
+(as.data.frame(DBP.Analysis.WelchTTest))
+
+##################################
+# Computing for the effect size
+##################################
+DBP.Analysis.WelchTTest.EffectSize <- DBP.Analysis %>%
+  cohens_d(DBP5.DBP1.Difference ~ TRT, var.equal = FALSE, hedges.correction = TRUE)
+
+(as.data.frame(DBP.Analysis.WelchTTest.EffectSize))
+
+##################################
+# Summarizing the hypothesis testing results
+##################################
+
+DBP.Analysis.WelchTTest.Statistics <- DBP.Analysis.WelchTTest %>% add_xy_position(x = "group")
+
+(DBP5DBP1Difference.ViolinBoxplot.ByTreatment <- ggplot(DBP.Analysis,aes(x=TRT,y=DBP5.DBP1.Difference,color=TRT)) +
+  geom_violin(scale="width", trim=FALSE) +
+  stat_boxplot(geom="errorbar",lwd=2) +
+  geom_boxplot(lwd=2, outlier.size=3, width=0.4) +
+  theme_bw() +
+  scale_fill_manual(values=c("#3259A0","#FF5050")) +
+  scale_color_manual(values=c("#3259A0","#FF5050")) +
+  scale_x_discrete(name="Treatment (TRT)", limits=c("Placebo","New")) +
+  scale_y_continuous(name="Diastolic Blood Pressure Change (DBP5-DBP1)",limits=c(-25,5),breaks=seq(-25,5,by=5)) +
+  theme(axis.title.x=element_text(color="black",face="bold",size=20),
+        legend.position="top",
+        legend.key.size = unit(1,"cm"),
+        legend.key.height = unit(1,"cm"), 
+        legend.key.width = unit(1,"cm"),
+        legend.title = element_text(size=20,face="bold"), 
+        legend.text = element_text(size=20,face="bold"),
+        text=element_text(size=15),
+        axis.text.y=element_text(color="black",face="bold",hjust=0.25,size=20),
+        axis.text.x=element_text(color="black",face="bold",size=20),
+        axis.title.y=element_text(color="black",face="bold",size=20),
+        axis.ticks.length=unit(0.25,"cm"),
+        plot.title=element_text(color="black",size=35,face="bold",hjust=0.50),
+        plot.subtitle = element_text(color="black",size=25,face="bold",hjust=0.50)) +
+   stat_summary(fun=mean, geom="line",color="black",size=2,aes(group=1)) +
+   stat_summary(fun=mean, geom="point",color="black",size=5) +
+  labs(subtitle = "t(36.52)=12.15, p=<0.0001, n=40, Effect Size=3.84") + 
+  ggtitle("Hypothesis Testing using Welch T-Test"))
+
+```
+
+### 1.7.3 Wilcoxon Rank-Sum Test
+|
+| **[A] Study Hypothesis.**
+|      **[A.1] Null Hypothesis.** There is no difference in the median change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) between treatment groups <span style="color: #FF0000">TRT=New</span> (new drug) and <span style="color: #FF0000">TRT=Placebo</span> (placebo drug). 
+|      **[A.2] Alternative Hypothesis.** There is a difference in the median change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) between treatment groups <span style="color: #FF0000">TRT=New</span> (new drug) and <span style="color: #FF0000">TRT=Placebo</span> (placebo drug). 
+| **[B] Hypothesis Testing Results.** The median change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) were -15.00 for the treatment group <span style="color: #FF0000">TRT=New</span> (new drug) and -5.50 for the treatment group <span style="color: #FF0000">TRT=Placebo</span> (placebo drug). Wilcoxon Rank-Sum Test (with relaxed assumptions on univariate normality) showed that the difference between both treatment groups was statistically significant, W = 400.00, p < 0.0001, n=40, effect size=0.86 (large magnitude). There is sufficient statistical evidence to reject the null hypothesis. Therefore, the median change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) between treatment groups <span style="color: #FF0000">TRT=New</span> (new drug) and <span style="color: #FF0000">TRT=Placebo</span> (placebo drug) were different.
+|
+```{r section_1.7.3, warning=FALSE, message=FALSE, fig.width=15, fig.height=8, fig.align="center"}
+##################################
+# Reusing the dataset
+##################################
+head(DBP.Analysis)
+
+##################################
+# Conducting Welch T-Test
+##################################
+DBP.Analysis.WilcoxonRankSumTest <- DBP.Analysis %>%
+  wilcox_test(DBP5.DBP1.Difference ~ TRT, detailed = TRUE) %>%
+  add_significance()
+
+(as.data.frame(DBP.Analysis.WilcoxonRankSumTest))
+
+##################################
+# Computing for the effect size
+##################################
+DBP.Analysis.WilcoxonRankSumTest.EffectSize <- DBP.Analysis %>%
+  wilcox_effsize(DBP5.DBP1.Difference ~ TRT)
+
+(as.data.frame(DBP.Analysis.WilcoxonRankSumTest.EffectSize))
+
+##################################
+# Summarizing the hypothesis testing results
+##################################
+
+DBP.Analysis.WilcoxonRankSumTest.Statistics <- DBP.Analysis.WilcoxonRankSumTest %>% add_xy_position(x = "group")
+
+(DBP5DBP1Difference.ViolinBoxplot.ByTreatment <- ggplot(DBP.Analysis,aes(x=TRT,y=DBP5.DBP1.Difference,color=TRT)) +
+  geom_violin(scale="width", trim=FALSE) +
+  stat_boxplot(geom="errorbar",lwd=2) +
+  geom_boxplot(lwd=2, outlier.size=3, width=0.4) +
+  theme_bw() +
+  scale_fill_manual(values=c("#3259A0","#FF5050")) +
+  scale_color_manual(values=c("#3259A0","#FF5050")) +
+  scale_x_discrete(name="Treatment (TRT)", limits=c("Placebo","New")) +
+  scale_y_continuous(name="Diastolic Blood Pressure Change (DBP5-DBP1)",limits=c(-25,5),breaks=seq(-25,5,by=5)) +
+  theme(axis.title.x=element_text(color="black",face="bold",size=20),
+        legend.position="top",
+        legend.key.size = unit(1,"cm"),
+        legend.key.height = unit(1,"cm"), 
+        legend.key.width = unit(1,"cm"),
+        legend.title = element_text(size=20,face="bold"), 
+        legend.text = element_text(size=20,face="bold"),
+        text=element_text(size=15),
+        axis.text.y=element_text(color="black",face="bold",hjust=0.25,size=20),
+        axis.text.x=element_text(color="black",face="bold",size=20),
+        axis.title.y=element_text(color="black",face="bold",size=20),
+        axis.ticks.length=unit(0.25,"cm"),
+        plot.title=element_text(color="black",size=35,face="bold",hjust=0.50),
+        plot.subtitle = element_text(color="black",size=25,face="bold",hjust=0.50)) +
+   stat_summary(fun=median, geom="line",color="black",size=2,aes(group=1)) +
+   stat_summary(fun=median, geom="point",color="black",size=5) +
+  labs(subtitle = "W=400.00, p=<0.0001, n=40, Effect Size=0.86") + 
+  ggtitle("Hypothesis Testing using Wilcoxon Rank-Sum Test"))
+
+```
+
+### 1.7.4 Robust Rank-Order Test
+|
+| **[A] Study Hypothesis.**
+|      **[A.1] Null Hypothesis.** There is no difference in the median change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) between treatment groups <span style="color: #FF0000">TRT=New</span> (new drug) and <span style="color: #FF0000">TRT=Placebo</span> (placebo drug). 
+|      **[A.2] Alternative Hypothesis.** There is a difference in the median change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) between treatment groups <span style="color: #FF0000">TRT=New</span> (new drug) and <span style="color: #FF0000">TRT=Placebo</span> (placebo drug). 
+| **[B] Hypothesis Testing Results.** The median change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) were -15.00 for the treatment group <span style="color: #FF0000">TRT=New</span> (new drug) and -5.50 for the treatment group <span style="color: #FF0000">TRT=Placebo</span> (placebo drug). Robust Rank-Order Test (with relaxed assumptions on both univariate normality and homogeneity of variance) showed that the difference between both treatment groups was statistically significant, z = Inf, p < 0.0001, n=40, effect size=(not determined). There is sufficient statistical evidence to reject the null hypothesis. Therefore, the median change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) between treatment groups <span style="color: #FF0000">TRT=New</span> (new drug) and <span style="color: #FF0000">TRT=Placebo</span> (placebo drug) were different.
+|
+```{r section_1.7.4, warning=FALSE, message=FALSE, fig.width=15, fig.height=8, fig.align="center"}
+##################################
+# Reusing the dataset
+##################################
+head(DBP.Analysis)
+
+##################################
+# Conducting Welch T-Test
+##################################
+(DBP.Analysis.RobustRankOrderTest <- rrod.test(DBP5.DBP1.Difference ~ TRT, DBP.Analysis))
+
+##################################
+# Summarizing the hypothesis testing results
+##################################
+
+(DBP5DBP1Difference.ViolinBoxplot.ByTreatment <- ggplot(DBP.Analysis,aes(x=TRT,y=DBP5.DBP1.Difference,color=TRT)) +
+  geom_violin(scale="width", trim=FALSE) +
+  stat_boxplot(geom="errorbar",lwd=2) +
+  geom_boxplot(lwd=2, outlier.size=3, width=0.4) +
+  theme_bw() +
+  scale_fill_manual(values=c("#3259A0","#FF5050")) +
+  scale_color_manual(values=c("#3259A0","#FF5050")) +
+  scale_x_discrete(name="Treatment (TRT)", limits=c("Placebo","New")) +
+  scale_y_continuous(name="Diastolic Blood Pressure Change (DBP5-DBP1)",limits=c(-25,5),breaks=seq(-25,5,by=5)) +
+  theme(axis.title.x=element_text(color="black",face="bold",size=20),
+        legend.position="top",
+        legend.key.size = unit(1,"cm"),
+        legend.key.height = unit(1,"cm"), 
+        legend.key.width = unit(1,"cm"),
+        legend.title = element_text(size=20,face="bold"), 
+        legend.text = element_text(size=20,face="bold"),
+        text=element_text(size=15),
+        axis.text.y=element_text(color="black",face="bold",hjust=0.25,size=20),
+        axis.text.x=element_text(color="black",face="bold",size=20),
+        axis.title.y=element_text(color="black",face="bold",size=20),
+        axis.ticks.length=unit(0.25,"cm"),
+        plot.title=element_text(color="black",size=35,face="bold",hjust=0.50),
+        plot.subtitle = element_text(color="black",size=25,face="bold",hjust=0.50)) +
+   stat_summary(fun=median, geom="line",color="black",size=2,aes(group=1)) +
+   stat_summary(fun=median, geom="point",color="black",size=5) +
+  labs(subtitle = "z=Inf, p=<0.0001, n=40, Effect Size=ND") + 
+  ggtitle("Hypothesis Testing using Robust Rank-Order Test"))
+
+```
+
+
+##  1.8 References
+|
+| **[Book]** [Clinical Trial Data Analysis Using R and SAS](https://www.routledge.com/Clinical-Trial-Data-Analysis-Using-R-and-SAS/Chen-Peace-Zhang/p/book/9780367736217) by Ding-Geng Chen, Karl Peace and Pinggao Zhang
+| **[Book]** [Nonparametric Statistics for the Behavioral Sciences](https://www.semanticscholar.org/paper/Nonparametric-Statistics-for-the-Behavioral-David-Siegel/53b9b242f8cb2007e8e3dd9db5cd11b88fa6c4a7) by Sidney Siegel and John Castellan
+| **[Article]** [Comparing Means of Two Groups in R](https://www.datanovia.com/en/courses/comparing-means-of-two-groups-in-r/) by Alboukadel Kassambara
+| **[Article]** [T-Test Essentials: Definition, Formula and Calculation](https://www.datanovia.com/en/lessons/types-of-t-test/) by Alboukadel Kassambara
+| **[Article]** [Comparing Means in R](http://sthda.com/english/wiki/comparing-means-in-r) by Alboukadel Kassambara
+| **[Article]** [T-Test (Student's T-Test) – Understanding the Math and How It Works](https://www.machinelearningplus.com/statistics/t-test-students-understanding-the-math-and-how-it-works/) by Selva Prabhakaran
+| **[Article]** [Student’s T Distribution](https://www.real-statistics.com/students-t-distribution/) by Charles Zaiontz
+| **[R Package]** [rstatix](https://mran.microsoft.com/web/packages/rstatix/index.html) by Alboukadel Kassambara
+| **[R Package]** [car](https://cran.r-project.org/web/packages/car/vignettes/embedding.pdf) by John Fox and Sanford Weisberg
+| **[R Package]** [effects](https://cran.r-project.org/web/packages/effects/vignettes/methods-supported-by-effects.pdf) by John Fox and Sanford Weisberg
+| **[R Package]** [multcomp](https://cran.r-project.org/web/packages/multcomp/vignettes/generalsiminf.pdf) by Torsten Hothorn, Frank Bretz and Peter Westfall
+| **[R Package]** [psych](http://personality-project.org/r/overview.pdf) by William Revelle
+| **[R Package]** [bootstrap](https://cran.r-project.org/web/packages/bootstrap/bootstrap.pdf) by Robert Tibshirani
+| **[R Package]** [moments](https://cran.r-project.org/web/packages/moments/index.html) by Lukasz Komsta and Frederick Novomestky
+| **[R Package]** [dplyr](https://cran.r-project.org/web/packages/dplyr/index.html) by Hadley Wickham
+| **[R Package]** [ggplot2](https://cran.r-project.org/web/packages/ggplot2/) by Hadley Wickham
+| **[R Package]** [ggpubr](https://cran.r-project.org/web/packages/ggpubr/index.html) by Alboukadel Kassambara
+| **[R Package]** [ggfortify](https://cran.r-project.org/web/packages/ggfortify/index.html) by Yuan Tang
+| **[R Package]** [trend](https://cran.r-project.org/web/packages/trend/index.html) by Thorsten Pohlert
+|
+|
+|
+|
+|
