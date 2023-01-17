@@ -801,7 +801,7 @@ head(DBP.Analysis)
 ```
 
 
-##  1.8 References
+# **2. References**
 |
 | **[Book]** [Clinical Trial Data Analysis Using R and SAS](https://www.routledge.com/Clinical-Trial-Data-Analysis-Using-R-and-SAS/Chen-Peace-Zhang/p/book/9780367736217) by Ding-Geng Chen, Karl Peace and Pinggao Zhang
 | **[Book]** [Nonparametric Statistics for the Behavioral Sciences](https://www.semanticscholar.org/paper/Nonparametric-Statistics-for-the-Behavioral-David-Siegel/53b9b242f8cb2007e8e3dd9db5cd11b88fa6c4a7) by Sidney Siegel and John Castellan
