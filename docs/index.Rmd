@@ -1,5 +1,5 @@
 ---
-title: "R : Treatment Comparison Tests Between a Single Factor Variable (2-Level)   and a Single Response Variable (Numeric)"
+title: "R : Treatment Comparison Tests Between a Single Factor Variable (2-Level)  and a Single Response Variable (Numeric)"
 author: "John Pauline Pineda"
 date: "April 26, 2022"
 output: 
@@ -283,12 +283,18 @@ if (length(names(DQA.Variables.Response))==0) {
 ##  1.4 Sample Size and Power Computation
 |
 | Given that the <mark style="background-color: #EEEEEE;color: #FF0000">**DBP**</mark> dataset used 20 study subjects for each treatment group <span style="color: #FF0000">TRT=New</span> (new drug) and <span style="color: #FF0000">TRT=Placebo</span> (placebo drug). The following parameters might have been used for determining the appropriate sample size prior to the study :
+|
 | **[A (Mean of Treatment Group)]** Mean change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) for the treatment group <span style="color: #FF0000">TRT=New</span> (new drug) was hypothesized to be -5.0 (indicating a decrease in diastolic blood pressure).
+|
 | **[B (Mean of Control Group)]** Mean change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) for the treatment group <span style="color: #FF0000">TRT=Placebo</span> (new drug) was hypothesized to be 0.0 (indicating no change in diastolic blood pressure).
+|
 | **[C (Measurement Standard Deviation)]** Standard deviation of the change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) was hypothesized to be 5.0.
+|
 | **[D (Effect Size)]** Effect size using Cohen's D was hypothesized to be 1.0 (large magnitude).
-| **[E. (Type I Error = Alpha)]** Type I error (difference between treatment groups is concluded when there is no actual difference) was hypothesized to be 5% .
-| **[F. Type II Error= Beta]** Type II error (no difference between treatment groups is concluded when there is an actual difference) was hypothesized to be 20% . Power of the test was hypothesized to be 80%.
+|
+| **[E. (Type I Error = Alpha)]** Type I error (difference between treatment groups is concluded when there is no actual difference) was hypothesized to be 5%.
+|
+| **[F. Type II Error= Beta]** Type II error (no difference between treatment groups is concluded when there is an actual difference) was hypothesized to be 20%. Power of the test was hypothesized to be 80%.
 |
 ```{r section_1.4, warning=FALSE, message=FALSE, fig.width=15, fig.height=8, fig.align="center"}
 ##################################
@@ -546,15 +552,19 @@ DBP.Analysis.VarianceEquality <- DBP.Analysis %>%
 |      **[A.5] Assumption 5: No univariate outliers.** No violation.
 |      **[A.6] Assumption 6: Univariate normality.** No violation.
 |      **[A.7] Assumption 7: Homogeneity of variance.** No violation.
+|
 | **[B]** For comparison, Welch T-Test will be applied on the dataset which is the appropriate test in cases when the assumption on homogeneity of variance is violated.
-| **[B]** For comparison, Wilcoxon Rank-Sum Test will be applied on the dataset which is the appropriate test in cases when the assumption on univariate normality is violated.
-| **[B]** For comparison, Robust Rank-Order Test will be applied on the dataset which is the appropriate test in cases when the assumptions on univariate normality and homogeneity of variance are both violated.
+|
+| **[C]** For comparison, Wilcoxon Rank-Sum Test will be applied on the dataset which is the appropriate test in cases when the assumption on univariate normality is violated.
+|
+| **[D]** For comparison, Robust Rank-Order Test will be applied on the dataset which is the appropriate test in cases when the assumptions on univariate normality and homogeneity of variance are both violated.
 
 ### 1.7.1 Student's T-Test
 |
 | **[A] Study Hypothesis.**
 |      **[A.1] Null Hypothesis.** There is no difference in the mean change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) between treatment groups <span style="color: #FF0000">TRT=New</span> (new drug) and <span style="color: #FF0000">TRT=Placebo</span> (placebo drug). 
 |      **[A.2] Alternative Hypothesis.** There is a difference in the mean change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) between treatment groups <span style="color: #FF0000">TRT=New</span> (new drug) and <span style="color: #FF0000">TRT=Placebo</span> (placebo drug). 
+|
 | **[B] Hypothesis Testing Results.** The mean change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) were -15.20 for the treatment group <span style="color: #FF0000">TRT=New</span> (new drug) and -4.80 for the treatment group <span style="color: #FF0000">TRT=Placebo</span> (placebo drug). Student's T-test showed that the difference between both treatment groups was statistically significant, t(38.00) = 12.15, p < 0.0001, n=40, effect size=3.84 (large magnitude). There is sufficient statistical evidence to reject the null hypothesis. Therefore, the mean change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) between treatment groups <span style="color: #FF0000">TRT=New</span> (new drug) and <span style="color: #FF0000">TRT=Placebo</span> (placebo drug) were different.
 |
 ```{r section_1.7.1, warning=FALSE, message=FALSE, fig.width=15, fig.height=8, fig.align="center"}
@@ -621,6 +631,7 @@ DBP.Analysis.StudentTTest.Statistics <- DBP.Analysis.StudentTTest %>% add_xy_pos
 | **[A] Study Hypothesis.**
 |      **[A.1] Null Hypothesis.** There is no difference in the mean change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) between treatment groups <span style="color: #FF0000">TRT=New</span> (new drug) and <span style="color: #FF0000">TRT=Placebo</span> (placebo drug). 
 |      **[A.2] Alternative Hypothesis.** There is a difference in the mean change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) between treatment groups <span style="color: #FF0000">TRT=New</span> (new drug) and <span style="color: #FF0000">TRT=Placebo</span> (placebo drug). 
+|
 | **[B] Hypothesis Testing Results.** The mean change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) were -15.20 for the treatment group <span style="color: #FF0000">TRT=New</span> (new drug) and -4.80 for the treatment group <span style="color: #FF0000">TRT=Placebo</span> (placebo drug). Welch T-Test (with relaxed assumptions on Homogeneity of variance) showed that the difference between both treatment groups was statistically significant, t(36.52) = 12.15, p < 0.0001, n=40, effect size=3.84 (large magnitude). There is sufficient statistical evidence to reject the null hypothesis. Therefore, the mean change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) between treatment groups <span style="color: #FF0000">TRT=New</span> (new drug) and <span style="color: #FF0000">TRT=Placebo</span> (placebo drug) were different.
 |
 ```{r section_1.7.2, warning=FALSE, message=FALSE, fig.width=15, fig.height=8, fig.align="center"}
@@ -687,6 +698,7 @@ DBP.Analysis.WelchTTest.Statistics <- DBP.Analysis.WelchTTest %>% add_xy_positio
 | **[A] Study Hypothesis.**
 |      **[A.1] Null Hypothesis.** There is no difference in the median change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) between treatment groups <span style="color: #FF0000">TRT=New</span> (new drug) and <span style="color: #FF0000">TRT=Placebo</span> (placebo drug). 
 |      **[A.2] Alternative Hypothesis.** There is a difference in the median change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) between treatment groups <span style="color: #FF0000">TRT=New</span> (new drug) and <span style="color: #FF0000">TRT=Placebo</span> (placebo drug). 
+|
 | **[B] Hypothesis Testing Results.** The median change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) were -15.00 for the treatment group <span style="color: #FF0000">TRT=New</span> (new drug) and -5.50 for the treatment group <span style="color: #FF0000">TRT=Placebo</span> (placebo drug). Wilcoxon Rank-Sum Test (with relaxed assumptions on univariate normality) showed that the difference between both treatment groups was statistically significant, W = 400.00, p < 0.0001, n=40, effect size=0.86 (large magnitude). There is sufficient statistical evidence to reject the null hypothesis. Therefore, the median change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) between treatment groups <span style="color: #FF0000">TRT=New</span> (new drug) and <span style="color: #FF0000">TRT=Placebo</span> (placebo drug) were different.
 |
 ```{r section_1.7.3, warning=FALSE, message=FALSE, fig.width=15, fig.height=8, fig.align="center"}
@@ -753,6 +765,7 @@ DBP.Analysis.WilcoxonRankSumTest.Statistics <- DBP.Analysis.WilcoxonRankSumTest 
 | **[A] Study Hypothesis.**
 |      **[A.1] Null Hypothesis.** There is no difference in the median change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) between treatment groups <span style="color: #FF0000">TRT=New</span> (new drug) and <span style="color: #FF0000">TRT=Placebo</span> (placebo drug). 
 |      **[A.2] Alternative Hypothesis.** There is a difference in the median change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) between treatment groups <span style="color: #FF0000">TRT=New</span> (new drug) and <span style="color: #FF0000">TRT=Placebo</span> (placebo drug). 
+|
 | **[B] Hypothesis Testing Results.** The median change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) were -15.00 for the treatment group <span style="color: #FF0000">TRT=New</span> (new drug) and -5.50 for the treatment group <span style="color: #FF0000">TRT=Placebo</span> (placebo drug). Robust Rank-Order Test (with relaxed assumptions on both univariate normality and homogeneity of variance) showed that the difference between both treatment groups was statistically significant, z = Inf, p < 0.0001, n=40, effect size=(not determined). There is sufficient statistical evidence to reject the null hypothesis. Therefore, the median change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) between treatment groups <span style="color: #FF0000">TRT=New</span> (new drug) and <span style="color: #FF0000">TRT=Placebo</span> (placebo drug) were different.
 |
 ```{r section_1.7.4, warning=FALSE, message=FALSE, fig.width=15, fig.height=8, fig.align="center"}
