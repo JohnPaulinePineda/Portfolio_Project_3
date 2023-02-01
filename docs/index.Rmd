@@ -818,11 +818,6 @@ head(DBP.Analysis)
 |
 | **[Book]** [Clinical Trial Data Analysis Using R and SAS](https://www.routledge.com/Clinical-Trial-Data-Analysis-Using-R-and-SAS/Chen-Peace-Zhang/p/book/9780367736217) by Ding-Geng Chen, Karl Peace and Pinggao Zhang
 | **[Book]** [Nonparametric Statistics for the Behavioral Sciences](https://www.semanticscholar.org/paper/Nonparametric-Statistics-for-the-Behavioral-David-Siegel/53b9b242f8cb2007e8e3dd9db5cd11b88fa6c4a7) by Sidney Siegel and John Castellan
-| **[Article]** [Comparing Means of Two Groups in R](https://www.datanovia.com/en/courses/comparing-means-of-two-groups-in-r/) by Alboukadel Kassambara
-| **[Article]** [T-Test Essentials: Definition, Formula and Calculation](https://www.datanovia.com/en/lessons/types-of-t-test/) by Alboukadel Kassambara
-| **[Article]** [Comparing Means in R](http://sthda.com/english/wiki/comparing-means-in-r) by Alboukadel Kassambara
-| **[Article]** [T-Test (Student's T-Test) – Understanding the Math and How It Works](https://www.machinelearningplus.com/statistics/t-test-students-understanding-the-math-and-how-it-works/) by Selva Prabhakaran
-| **[Article]** [Student’s T Distribution](https://www.real-statistics.com/students-t-distribution/) by Charles Zaiontz
 | **[R Package]** [rstatix](https://mran.microsoft.com/web/packages/rstatix/index.html) by Alboukadel Kassambara
 | **[R Package]** [car](https://cran.r-project.org/web/packages/car/vignettes/embedding.pdf) by John Fox and Sanford Weisberg
 | **[R Package]** [effects](https://cran.r-project.org/web/packages/effects/vignettes/methods-supported-by-effects.pdf) by John Fox and Sanford Weisberg
@@ -835,6 +830,11 @@ head(DBP.Analysis)
 | **[R Package]** [ggpubr](https://cran.r-project.org/web/packages/ggpubr/index.html) by Alboukadel Kassambara
 | **[R Package]** [ggfortify](https://cran.r-project.org/web/packages/ggfortify/index.html) by Yuan Tang
 | **[R Package]** [trend](https://cran.r-project.org/web/packages/trend/index.html) by Thorsten Pohlert
+| **[Article]** [Comparing Means of Two Groups in R](https://www.datanovia.com/en/courses/comparing-means-of-two-groups-in-r/) by Alboukadel Kassambara
+| **[Article]** [T-Test Essentials: Definition, Formula and Calculation](https://www.datanovia.com/en/lessons/types-of-t-test/) by Alboukadel Kassambara
+| **[Article]** [Comparing Means in R](http://sthda.com/english/wiki/comparing-means-in-r) by Alboukadel Kassambara
+| **[Article]** [T-Test (Student's T-Test) – Understanding the Math and How It Works](https://www.machinelearningplus.com/statistics/t-test-students-understanding-the-math-and-how-it-works/) by Selva Prabhakaran
+| **[Article]** [Student’s T Distribution](https://www.real-statistics.com/students-t-distribution/) by Charles Zaiontz
 |
 |
 |
