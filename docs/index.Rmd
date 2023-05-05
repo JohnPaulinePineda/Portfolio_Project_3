@@ -284,13 +284,13 @@ if (length(names(DQA.Variables.Response))==0) {
 |
 | Given that the <mark style="background-color: #EEEEEE;color: #FF0000">**DBP**</mark> dataset used 20 study subjects for each treatment group <span style="color: #FF0000">TRT=New</span> (new drug) and <span style="color: #FF0000">TRT=Placebo</span> (placebo drug). The following parameters might have been used for determining the appropriate sample size prior to the study :
 |
-| **[A (Mean of Treatment Group)]** Mean change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) for the treatment group <span style="color: #FF0000">TRT=New</span> (new drug) was hypothesized to be -5.0 (indicating a decrease in diastolic blood pressure).
+| **[A. (Mean of Treatment Group)]** Mean change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) for the treatment group <span style="color: #FF0000">TRT=New</span> (new drug) was hypothesized to be -5.0 (indicating a decrease in diastolic blood pressure).
 |
-| **[B (Mean of Control Group)]** Mean change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) for the treatment group <span style="color: #FF0000">TRT=Placebo</span> (new drug) was hypothesized to be 0.0 (indicating no change in diastolic blood pressure).
+| **[B. (Mean of Control Group)]** Mean change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) for the treatment group <span style="color: #FF0000">TRT=Placebo</span> (new drug) was hypothesized to be 0.0 (indicating no change in diastolic blood pressure).
 |
-| **[C (Measurement Standard Deviation)]** Standard deviation of the change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) was hypothesized to be 5.0.
+| **[C. (Measurement Standard Deviation)]** Standard deviation of the change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) was hypothesized to be 5.0.
 |
-| **[D (Effect Size)]** Effect size using Cohen's D was hypothesized to be 1.0 (large magnitude).
+| **[D. (Effect Size)]** Effect size using Cohen's D was hypothesized to be 1.0 (large magnitude).
 |
 | **[E. (Type I Error = Alpha)]** Type I error (difference between treatment groups is concluded when there is no actual difference) was hypothesized to be 5%.
 |
