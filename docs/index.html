@@ -491,10 +491,27 @@ References</strong></a></li>
 <div id="table-of-contents" class="section level1">
 <h1><strong>1. Table of Contents</strong></h1>
 <div class="line-block"><br />
-This document presents a non-exhaustive list of various treatment
-comparison tests between two groups with ordinal response variable using
-various helpful packages in
-<mark style="background-color: #CCECFF"><strong>R</strong></mark>.<br />
+This project explores the various methods in comparatively evaluating
+the numeric response data between two treatment groups in a clinical
+trial using various helpful packages in
+<mark style="background-color: #CCECFF"><strong>R</strong></mark>.
+Statistical tests applied in the analysis included the <strong>Student’s
+T-Test</strong>, <strong>Welch T-Test</strong>, <strong>Wilcoxon
+Rank-Sum Test</strong> and <strong>Robust Rank-Order
+Test</strong>.<br />
+<br />
+Although clinical trials are conducted with multiple treatment groups,
+questions of interest are often expressed as pairwise comparisons among
+the groups. In a clinical trial involving two forms of intervention
+groups and a baseline may have as its objective the effectiveness of
+each intervention, and whether the interventions differ in their
+effectiveness. The statistical methods applied in this study (mostly
+contained in the
+<mark style="background-color: #CCECFF"><strong>stats</strong></mark>
+and
+<mark style="background-color: #CCECFF"><strong>trend</strong></mark>
+packages) attempt to compare treatment groups in clinical trials given a
+numeric clinical endpoint.<br />
 </div>
 <div id="sample-data" class="section level2">
 <h2>1.1 Sample Data</h2>
@@ -538,32 +555,33 @@ measurement made on the 5th month<br />
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(moments)</span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(car)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(multcomp)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(effects)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(psych)</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggpubr)</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rstatix)</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggfortify)</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(trend)</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Setting the working directory</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="fu">setwd</span>(<span class="st">&quot;D:/R_Codes/Markdown/ClinicalTrialDataAnalysis&quot;</span>)</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Reading and creating the complete dataset</span></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>DBP.Complete <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&#39;DBP.csv&#39;</span>,</span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>                <span class="at">na.strings=</span><span class="fu">c</span>(<span class="st">&quot;NA&quot;</span>,<span class="st">&quot;NaN&quot;</span>,<span class="st">&quot; &quot;</span>,<span class="st">&quot;&quot;</span>),</span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>                <span class="at">stringsAsFactors =</span> T)</span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Performing a general exploration of the dataset</span></span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(DBP.Complete)</span></code></pre></div>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(stats)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(multcomp)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(effects)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(psych)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggpubr)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rstatix)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggfortify)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(trend)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Setting the working directory</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="fu">setwd</span>(<span class="st">&quot;D:/R_Codes/Markdown/ClinicalTrialDataAnalysis&quot;</span>)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Reading and creating the complete dataset</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>DBP.Complete <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&#39;DBP.csv&#39;</span>,</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>                <span class="at">na.strings=</span><span class="fu">c</span>(<span class="st">&quot;NA&quot;</span>,<span class="st">&quot;NaN&quot;</span>,<span class="st">&quot; &quot;</span>,<span class="st">&quot;&quot;</span>),</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>                <span class="at">stringsAsFactors =</span> T)</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Performing a general exploration of the dataset</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="do">##################################</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(DBP.Complete)</span></code></pre></div>
 <pre><code>## [1] 40  9</code></pre>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(DBP.Complete)</span></code></pre></div>
 <pre><code>## &#39;data.frame&#39;:    40 obs. of  9 variables:

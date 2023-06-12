@@ -16,7 +16,9 @@ knitr::opts_chunk$set(echo = TRUE, fig.width=15, fig.height=10)
 ```
 # **1. Table of Contents**
 |
-| This document presents a non-exhaustive list of various treatment comparison tests between two groups with ordinal response variable using various helpful packages in <mark style="background-color: #CCECFF">**R**</mark>.    
+| This project explores the various methods in comparatively evaluating the numeric response data between two treatment groups in a clinical trial using various helpful packages in <mark style="background-color: #CCECFF">**R**</mark>. Statistical tests applied in the analysis included the **Student’s T-Test**, **Welch T-Test**, **Wilcoxon Rank-Sum Test** and **Robust Rank-Order Test**.
+|
+| Although clinical trials are conducted with multiple treatment groups, questions of interest are often expressed as pairwise comparisons among the groups. In a clinical trial involving two forms of intervention groups and a baseline may have as its objective the effectiveness of each intervention, and whether the interventions differ in their effectiveness. The statistical methods applied in this study (mostly contained in the <mark style="background-color: #CCECFF">**stats**</mark> and <mark style="background-color: #CCECFF">**trend**</mark> packages) attempt to compare treatment groups in clinical trials given a numeric clinical endpoint.
 |
 ##  1.1 Sample Data
 |
@@ -47,6 +49,7 @@ knitr::opts_chunk$set(echo = TRUE, fig.width=15, fig.height=10)
 ##################################
 library(moments)
 library(car)
+library(stats)
 library(multcomp)
 library(effects)
 library(psych)
