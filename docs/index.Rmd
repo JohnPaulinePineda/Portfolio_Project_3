@@ -43,6 +43,10 @@ knitr::opts_chunk$set(echo = TRUE, fig.width=15, fig.height=10)
 |           **[B.4.1]** <span style="color: #FF0000">M</span> = male study participant
 |           **[B.4.2]** <span style="color: #FF0000">F</span> = female study participant
 |
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
 ```{r section_1.1, warning=FALSE, message=FALSE}
 ##################################
 # Loading R libraries
@@ -113,6 +117,8 @@ PDA <- DBP.Response.Covariate
 
 ```
 
+</details>
+
 ##  1.2 Data Quality Assessment
 |
 | Data quality assessment:
@@ -123,6 +129,10 @@ PDA <- DBP.Response.Covariate
 |
 | **[C]** No high skewness (Skewness>3 or Skewness<(-3)) noted for any response variable.
 |
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
 ```{r section_1.2, warning=FALSE, message=FALSE}
 ##################################
 # Restoring the working directory
@@ -273,6 +283,8 @@ if (length(names(DQA.Variables.Response))==0) {
 
 ```
 
+</details>
+
 ##  1.3 Research Question
 |
 | Using the <mark style="background-color: #EEEEEE;color: #FF0000">**DBP**</mark> dataset, treatment comparison tests will be conducted to investigate the following :
@@ -299,6 +311,10 @@ if (length(names(DQA.Variables.Response))==0) {
 |
 | **[F. Type II Error= Beta]** Type II error (no difference between treatment groups is concluded when there is an actual difference) was hypothesized to be 20%. Power of the test was hypothesized to be 80%.
 |
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
 ```{r section_1.4, warning=FALSE, message=FALSE, fig.width=15, fig.height=8, fig.align="center"}
 ##################################
 # Determining sample sizes
@@ -399,6 +415,7 @@ SampleSizePowerCurve.Reshaped <- gather(SampleSizePowerCurve,"Power=70%","Power=
 
 ```
 
+</details>
 
 ## 1.5 Data Exploration
 |
@@ -410,6 +427,10 @@ SampleSizePowerCurve.Reshaped <- gather(SampleSizePowerCurve,"Power=70%","Power=
 |
 | **[C]** Minimal outliers observed for both <span style="color: #FF0000">TRT=New</span> (new drug) and <span style="color: #FF0000">TRT=Placebo</span> (placebo drug).
 |
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
 ```{r section_1.5, warning=FALSE, message=FALSE, fig.width=15, fig.height=8, fig.align="center"}
 ##################################
 # Reusing the dataset
@@ -472,6 +493,8 @@ DBP.Analysis.SummaryStatistics <- DBP.Analysis %>%
 
 ```
 
+</details>
+
 ## 1.6 Evaluation of Important Statistical Assumptions
 |
 | Evaluating various statistical assumptions showed that :
@@ -487,6 +510,10 @@ DBP.Analysis.SummaryStatistics <- DBP.Analysis %>%
 |      **[B.2] Assumption 6: Univariate normality.** From the results of the Shapiro-Wilk's test, the determined p-values were greater than the significance level 0.05 indicating that the distribution of the data for both treatment groups <span style="color: #FF0000">TRT=New</span> (new drug) and <span style="color: #FF0000">TRT=Placebo</span> (placebo drug) were not significantly different from the normal distribution. The QQ-Plot (which draws the correlation between the given data and the normal distribution) showed all points falling approximately along the reference line for both groups. No violation.
 |      **[B.3] Assumption 7: Homogeneity of variance.** From the results of the Levene's test, the determined p-value was greater than the significance level 0.05 indicating that there was no significant difference between the variances of both treatment groups <span style="color: #FF0000">TRT=New</span> (new drug) and <span style="color: #FF0000">TRT=Placebo</span> (placebo drug). No violation.
 |
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
 ```{r section_1.6, warning=FALSE, message=FALSE, fig.width=15, fig.height=8, fig.align="center"}
 ##################################
 # Reusing the dataset
@@ -545,6 +572,9 @@ DBP.Analysis.VarianceEquality <- DBP.Analysis %>%
 (as.data.frame(DBP.Analysis.VarianceEquality))
 
 ```
+
+</details>
+
 ## 1.7 Statistical Tests for Treatment Comparison Between a Single Factor Variable (2-Level) and a Single Response Variable (Numeric) 
 |
 | **[A]** Student's T-Test can be applied on the dataset considering that no statistical assumptions have been violated.
@@ -570,6 +600,10 @@ DBP.Analysis.VarianceEquality <- DBP.Analysis %>%
 |
 | **[B] Hypothesis Testing Results.** The mean change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) were -15.20 for the treatment group <span style="color: #FF0000">TRT=New</span> (new drug) and -4.80 for the treatment group <span style="color: #FF0000">TRT=Placebo</span> (placebo drug). Student's T-test showed that the difference between both treatment groups was statistically significant, t(38.00) = 12.15, p < 0.0001, n=40, effect size=3.84 (large magnitude). There is sufficient statistical evidence to reject the null hypothesis. Therefore, the mean change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) between treatment groups <span style="color: #FF0000">TRT=New</span> (new drug) and <span style="color: #FF0000">TRT=Placebo</span> (placebo drug) were different.
 |
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
 ```{r section_1.7.1, warning=FALSE, message=FALSE, fig.width=15, fig.height=8, fig.align="center"}
 ##################################
 # Reusing the dataset
@@ -629,6 +663,8 @@ DBP.Analysis.StudentTTest.Statistics <- DBP.Analysis.StudentTTest %>% add_xy_pos
 
 ```
 
+</details>
+
 ### 1.7.2 Welch T-Test
 |
 | **[A] Study Hypothesis.**
@@ -637,6 +673,10 @@ DBP.Analysis.StudentTTest.Statistics <- DBP.Analysis.StudentTTest %>% add_xy_pos
 |
 | **[B] Hypothesis Testing Results.** The mean change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) were -15.20 for the treatment group <span style="color: #FF0000">TRT=New</span> (new drug) and -4.80 for the treatment group <span style="color: #FF0000">TRT=Placebo</span> (placebo drug). Welch T-Test (with relaxed assumptions on Homogeneity of variance) showed that the difference between both treatment groups was statistically significant, t(36.52) = 12.15, p < 0.0001, n=40, effect size=3.84 (large magnitude). There is sufficient statistical evidence to reject the null hypothesis. Therefore, the mean change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) between treatment groups <span style="color: #FF0000">TRT=New</span> (new drug) and <span style="color: #FF0000">TRT=Placebo</span> (placebo drug) were different.
 |
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
 ```{r section_1.7.2, warning=FALSE, message=FALSE, fig.width=15, fig.height=8, fig.align="center"}
 ##################################
 # Reusing the dataset
@@ -696,6 +736,8 @@ DBP.Analysis.WelchTTest.Statistics <- DBP.Analysis.WelchTTest %>% add_xy_positio
 
 ```
 
+</details>
+
 ### 1.7.3 Wilcoxon Rank-Sum Test
 |
 | **[A] Study Hypothesis.**
@@ -704,6 +746,10 @@ DBP.Analysis.WelchTTest.Statistics <- DBP.Analysis.WelchTTest %>% add_xy_positio
 |
 | **[B] Hypothesis Testing Results.** The median change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) were -15.00 for the treatment group <span style="color: #FF0000">TRT=New</span> (new drug) and -5.50 for the treatment group <span style="color: #FF0000">TRT=Placebo</span> (placebo drug). Wilcoxon Rank-Sum Test (with relaxed assumptions on univariate normality) showed that the difference between both treatment groups was statistically significant, W = 400.00, p < 0.0001, n=40, effect size=0.86 (large magnitude). There is sufficient statistical evidence to reject the null hypothesis. Therefore, the median change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) between treatment groups <span style="color: #FF0000">TRT=New</span> (new drug) and <span style="color: #FF0000">TRT=Placebo</span> (placebo drug) were different.
 |
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
 ```{r section_1.7.3, warning=FALSE, message=FALSE, fig.width=15, fig.height=8, fig.align="center"}
 ##################################
 # Reusing the dataset
@@ -763,6 +809,8 @@ DBP.Analysis.WilcoxonRankSumTest.Statistics <- DBP.Analysis.WilcoxonRankSumTest 
 
 ```
 
+</details>
+
 ### 1.7.4 Robust Rank-Order Test
 |
 | **[A] Study Hypothesis.**
@@ -771,6 +819,10 @@ DBP.Analysis.WilcoxonRankSumTest.Statistics <- DBP.Analysis.WilcoxonRankSumTest 
 |
 | **[B] Hypothesis Testing Results.** The median change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) were -15.00 for the treatment group <span style="color: #FF0000">TRT=New</span> (new drug) and -5.50 for the treatment group <span style="color: #FF0000">TRT=Placebo</span> (placebo drug). Robust Rank-Order Test (with relaxed assumptions on both univariate normality and homogeneity of variance) showed that the difference between both treatment groups was statistically significant, z = Inf, p < 0.0001, n=40, effect size=(not determined). There is sufficient statistical evidence to reject the null hypothesis. Therefore, the median change in diastolic blood pressure readings measured between the 1st and the 5th months (<span style="color: #FF0000">DBP5-DBP1</span>) between treatment groups <span style="color: #FF0000">TRT=New</span> (new drug) and <span style="color: #FF0000">TRT=Placebo</span> (placebo drug) were different.
 |
+|
+
+<details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
+
 ```{r section_1.7.4, warning=FALSE, message=FALSE, fig.width=15, fig.height=8, fig.align="center"}
 ##################################
 # Reusing the dataset
@@ -816,6 +868,7 @@ head(DBP.Analysis)
 
 ```
 
+</details>
 
 # **2. References**
 |
