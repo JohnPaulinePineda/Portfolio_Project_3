@@ -788,20 +788,20 @@ DBP.Analysis.WilcoxonRankSumTest.Statistics <- DBP.Analysis.WilcoxonRankSumTest 
   scale_color_manual(values=c("#3259A0","#FF5050")) +
   scale_x_discrete(name="Treatment (TRT)", limits=c("Placebo","New")) +
   scale_y_continuous(name="Diastolic Blood Pressure Change (DBP5-DBP1)",limits=c(-25,5),breaks=seq(-25,5,by=5)) +
-  theme(axis.title.x=element_text(color="black",face="bold",size=20),
+  theme(axis.title.x=element_text(color="black",face="bold",size=12),
         legend.position="top",
         legend.key.size = unit(1,"cm"),
         legend.key.height = unit(1,"cm"), 
         legend.key.width = unit(1,"cm"),
-        legend.title = element_text(size=20,face="bold"), 
-        legend.text = element_text(size=20,face="bold"),
-        text=element_text(size=15),
-        axis.text.y=element_text(color="black",face="bold",hjust=0.25,size=20),
-        axis.text.x=element_text(color="black",face="bold",size=20),
-        axis.title.y=element_text(color="black",face="bold",size=20),
+        legend.title = element_text(size=12), 
+        legend.text = element_text(size=9),
+        text=element_text(size=9),
+        axis.text.y=element_text(color="black",hjust=0.25,size=9),
+        axis.text.x=element_text(color="black",size=9),
+        axis.title.y=element_text(color="black",face="bold",size=12),
         axis.ticks.length=unit(0.25,"cm"),
-        plot.title=element_text(color="black",size=35,face="bold",hjust=0.50),
-        plot.subtitle = element_text(color="black",size=25,face="bold",hjust=0.50)) +
+        plot.title=element_text(color="black",size=14,face="bold",hjust=0.50),
+        plot.subtitle = element_text(color="black",size=14,hjust=0.50)) +
    stat_summary(fun=median, geom="line",color="black",size=2,aes(group=1)) +
    stat_summary(fun=median, geom="point",color="black",size=5) +
   labs(subtitle = "W=400.00, p=<0.0001, n=40, Effect Size=0.86") + 
@@ -847,20 +847,20 @@ head(DBP.Analysis)
   scale_color_manual(values=c("#3259A0","#FF5050")) +
   scale_x_discrete(name="Treatment (TRT)", limits=c("Placebo","New")) +
   scale_y_continuous(name="Diastolic Blood Pressure Change (DBP5-DBP1)",limits=c(-25,5),breaks=seq(-25,5,by=5)) +
-  theme(axis.title.x=element_text(color="black",face="bold",size=20),
+  theme(axis.title.x=element_text(color="black",face="bold",size=12),
         legend.position="top",
         legend.key.size = unit(1,"cm"),
         legend.key.height = unit(1,"cm"), 
         legend.key.width = unit(1,"cm"),
-        legend.title = element_text(size=20,face="bold"), 
-        legend.text = element_text(size=20,face="bold"),
-        text=element_text(size=15),
-        axis.text.y=element_text(color="black",face="bold",hjust=0.25,size=20),
-        axis.text.x=element_text(color="black",face="bold",size=20),
-        axis.title.y=element_text(color="black",face="bold",size=20),
+        legend.title = element_text(size=12), 
+        legend.text = element_text(size=9),
+        text=element_text(size=9),
+        axis.text.y=element_text(color="black",hjust=0.25,size=9),
+        axis.text.x=element_text(color="black",size=9),
+        axis.title.y=element_text(color="black",face="bold",size=12),
         axis.ticks.length=unit(0.25,"cm"),
-        plot.title=element_text(color="black",size=35,face="bold",hjust=0.50),
-        plot.subtitle = element_text(color="black",size=25,face="bold",hjust=0.50)) +
+        plot.title=element_text(color="black",size=14,face="bold",hjust=0.50),
+        plot.subtitle = element_text(color="black",size=14,hjust=0.50)) +
    stat_summary(fun=median, geom="line",color="black",size=2,aes(group=1)) +
    stat_summary(fun=median, geom="point",color="black",size=5) +
   labs(subtitle = "z=Inf, p=<0.0001, n=40, Effect Size=ND") + 
