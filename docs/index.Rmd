@@ -891,9 +891,12 @@ head(DBP.Analysis)
 | **[Article]** [Comparing Means in R](http://sthda.com/english/wiki/comparing-means-in-r) by Alboukadel Kassambara
 | **[Article]** [T-Test (Student's T-Test) – Understanding the Math and How It Works](https://www.machinelearningplus.com/statistics/t-test-students-understanding-the-math-and-how-it-works/) by Selva Prabhakaran
 | **[Article]** [Student’s T Distribution](https://www.real-statistics.com/students-t-distribution/) by Charles Zaiontz
+| **[Article]** [Welch’s T-test: When to Use it + Examples](https://www.statology.org/welchs-t-test/) by Statology Team
 | **[Publication]** [The Probable Error of a Mean](https://www.semanticscholar.org/paper/THE-PROBABLE-ERROR-OF-A-MEAN-Student/01cd1182a27f503a5935f9f2deb17dc1c8d65856) by William Gossett (Biometrika)
 | **[Publication]** [The Generalisation of Student's Problems When Several Different Population Variances are Involved](https://www.semanticscholar.org/paper/The-generalisation-of-student%27s-problems-when-are-Welch/ea0190e9062c66e170a26a2861323010b1e65ec3) by Bernard Welch (Biometrika)
+| **[Publication]** [Individual Comparisons by Ranking Methods](https://www.semanticscholar.org/paper/Individual-Comparisons-by-Ranking-Methods-Wilcoxon/59d823fc9877f8d448ac4c2d90e38051026e3201) by Frank Wilcoxon (Biometrika)
 | **[Publication]** [On a Test of Whether one of Two Random Variables is Stochastically Larger than the Other](https://www.semanticscholar.org/paper/On-a-Test-of-Whether-one-of-Two-Random-Variables-is-Mann-Whitney/60f788264e6278374be9dabd8e2a644cc65129b6) by Henry Mann and Donald Whitney (Annals of Mathematical Statistics)
+| **[Publication]** [Robust Rank Procedures for the Behrens-Fisher Problem](https://www.semanticscholar.org/paper/Robust-Rank-Procedures-for-the-Behrens-Fisher-Fligner-Policello/74d0191c786a1db3387497b32ec7a7352702b571) by Michael Fligner and George Policello (Journal of the American Statistical Association)
 |
 |
 |
