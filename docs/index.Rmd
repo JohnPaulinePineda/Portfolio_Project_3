@@ -882,6 +882,7 @@ head(DBP.Analysis)
 |
 | **[Book]** [Clinical Trial Data Analysis Using R and SAS](https://www.routledge.com/Clinical-Trial-Data-Analysis-Using-R-and-SAS/Chen-Peace-Zhang/p/book/9780367736217) by Ding-Geng Chen, Karl Peace and Pinggao Zhang
 | **[Book]** [Nonparametric Statistics for the Behavioral Sciences](https://www.semanticscholar.org/paper/Nonparametric-Statistics-for-the-Behavioral-David-Siegel/53b9b242f8cb2007e8e3dd9db5cd11b88fa6c4a7) by Sidney Siegel and John Castellan
+| **[Book]** [Handbook of Parametric and Nonparametric Statistical Procedures](https://www.taylorfrancis.com/books/mono/10.1201/9781420036268/handbook-parametric-nonparametric-statistical-procedures-david-sheskin) by David Sheskin
 | **[R Package]** [rstatix](https://mran.microsoft.com/web/packages/rstatix/index.html) by Alboukadel Kassambara
 | **[R Package]** [car](https://cran.r-project.org/web/packages/car/vignettes/embedding.pdf) by John Fox and Sanford Weisberg
 | **[R Package]** [effects](https://cran.r-project.org/web/packages/effects/vignettes/methods-supported-by-effects.pdf) by John Fox and Sanford Weisberg
@@ -899,12 +900,21 @@ head(DBP.Analysis)
 | **[Article]** [Comparing Means in R](http://sthda.com/english/wiki/comparing-means-in-r) by Alboukadel Kassambara
 | **[Article]** [T-Test (Student's T-Test) – Understanding the Math and How It Works](https://www.machinelearningplus.com/statistics/t-test-students-understanding-the-math-and-how-it-works/) by Selva Prabhakaran
 | **[Article]** [Student’s T Distribution](https://www.real-statistics.com/students-t-distribution/) by Charles Zaiontz
-| **[Article]** [Welch’s T-test: When to Use it + Examples](https://www.statology.org/welchs-t-test/) by Statology Team
+| **[Article]** [Welch’s T-Test: When to Use It + Examples](https://www.statology.org/welchs-t-test/) by Statology Team
+| **[Article]** [Two Sample T-Test: Unequal Variances](https://real-statistics.com/students-t-distribution/two-sample-t-test-uequal-variances/) by Charles Zaiontz
+| **[Article]** [The Unequal Variance Welch T-Test](https://www.graphpad.com/guides/prism/latest/statistics/stat_the_unequal_variance_welch_t_t.htm) by GraphPad Team
+| **[Article]** [How to Determine Equal or Unequal Variance in T-Tests](https://www.statology.org/determine-equal-or-unequal-variance/) by Statology Team
+| **[Article]** [The Wilcoxon Rank Sum Test](https://data.library.virginia.edu/the-wilcoxon-rank-sum-test/) by University of Virginia Library
+| **[Article]** [Mann Whitney U Test (Wilcoxon Rank Sum Test)](https://sphweb.bumc.bu.edu/otlt/MPH-Modules/BS/BS704_Nonparametric/BS704_Nonparametric4.html) by Boston University School of Public Health
+| **[Article]** [Interpreting Results: Mann-Whitney Test](https://www.graphpad.com/guides/prism/latest/statistics/how_the_mann-whitney_test_works.htm) by GraphPad Team
+| **[Article]** [Fligner-Policello Test](https://real-statistics.com/non-parametric-tests/fligner-policello-test/) by Charles Zaiontz
+| **[Article]** [Fligner-Policello Test](https://support.sas.com/documentation/cdl/en/statug/65328/HTML/default/viewer.htm#statug_npar1way_details20.htm) by SAS Team
 | **[Publication]** [The Probable Error of a Mean](https://www.semanticscholar.org/paper/THE-PROBABLE-ERROR-OF-A-MEAN-Student/01cd1182a27f503a5935f9f2deb17dc1c8d65856) by William Gossett (Biometrika)
 | **[Publication]** [The Generalisation of Student's Problems When Several Different Population Variances are Involved](https://www.semanticscholar.org/paper/The-generalisation-of-student%27s-problems-when-are-Welch/ea0190e9062c66e170a26a2861323010b1e65ec3) by Bernard Welch (Biometrika)
 | **[Publication]** [Individual Comparisons by Ranking Methods](https://www.semanticscholar.org/paper/Individual-Comparisons-by-Ranking-Methods-Wilcoxon/59d823fc9877f8d448ac4c2d90e38051026e3201) by Frank Wilcoxon (Biometrika)
 | **[Publication]** [On a Test of Whether one of Two Random Variables is Stochastically Larger than the Other](https://www.semanticscholar.org/paper/On-a-Test-of-Whether-one-of-Two-Random-Variables-is-Mann-Whitney/60f788264e6278374be9dabd8e2a644cc65129b6) by Henry Mann and Donald Whitney (Annals of Mathematical Statistics)
 | **[Publication]** [Robust Rank Procedures for the Behrens-Fisher Problem](https://www.semanticscholar.org/paper/Robust-Rank-Procedures-for-the-Behrens-Fisher-Fligner-Policello/74d0191c786a1db3387497b32ec7a7352702b571) by Michael Fligner and George Policello (Journal of the American Statistical Association)
+| **[Publication]** [Fermat, Schubert, Einstein, and Behrens-Fisher: The Probable Difference Between Two Means With Different Variances](https://www.semanticscholar.org/paper/Fermat%2C-Schubert%2C-Einstein%2C-and-Behrens-Fisher%3A-The-Sawilowsky/edc96140dc5d7c28159c04272c22bc7783421a8a) by Shlomo Sawilowsky (Journal of Modern Applied Statistical Methods)
 |
 |
 |
