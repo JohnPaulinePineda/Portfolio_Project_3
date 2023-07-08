@@ -1281,6 +1281,16 @@ violated.</div>
 <div id="students-t-test" class="section level3">
 <h3>1.7.1 Student’s T-Test</h3>
 <div class="line-block"><br />
+<a href="https://www.semanticscholar.org/paper/THE-PROBABLE-ERROR-OF-A-MEAN-Student/01cd1182a27f503a5935f9f2deb17dc1c8d65856">Student’s
+T-Test</a> evaluates the difference between two groups or conditions
+when dealing with unpaired data under the assumption that the data is
+normally distributed and the variances of the two groups being compared
+are equal. The test calculates the t-statistic which measures the
+difference in means between the groups relative to the variability
+within each group, and provides a p-value that indicates the probability
+of observing the obtained difference (or more extreme) if the null
+hypothesis (no difference between groups) is true.<br />
+<br />
 <strong>[A] Study Hypothesis.</strong><br />
      <strong>[A.1] Null Hypothesis.</strong> There is no difference in
 the mean change in diastolic blood pressure readings measured between
@@ -1380,6 +1390,15 @@ Chunk | Output</strong></mark>
 <div id="welch-t-test" class="section level3">
 <h3>1.7.2 Welch T-Test</h3>
 <div class="line-block"><br />
+<a href="https://www.semanticscholar.org/paper/The-generalisation-of-student%27s-problems-when-are-Welch/ea0190e9062c66e170a26a2861323010b1e65ec3">Welch
+T-Test</a>, also known as the unequal variances T-Test, is a
+modification of the T-Test that relaxes the assumption of equal
+variances. it is suitable when the variances of the two groups being
+compared are not equal. The test also calculates a t-statistic and
+provides p-values similar to the T-Test, but is more robust than the
+standard T-Test in situations when the assumption of equal variances is
+violated.<br />
+<br />
 <strong>[A] Study Hypothesis.</strong><br />
      <strong>[A.1] Null Hypothesis.</strong> There is no difference in
 the mean change in diastolic blood pressure readings measured between
@@ -1478,6 +1497,17 @@ Chunk | Output</strong></mark>
 <div id="wilcoxon-rank-sum-test" class="section level3">
 <h3>1.7.3 Wilcoxon Rank-Sum Test</h3>
 <div class="line-block"><br />
+<a href="https://www.semanticscholar.org/paper/Individual-Comparisons-by-Ranking-Methods-Wilcoxon/59d823fc9877f8d448ac4c2d90e38051026e3201">Wilcoxon
+Rank-Sum Test</a>, also known as the Mann-Whitney u Test, is a
+non-parametric test that does not assume a specific distribution of the
+data. It is used when the data are not normally distributed or when the
+assumptions of the T-Test are violated. It compares the medians of the
+two groups instead of the medians. Instead of working with the raw data
+values, the test ranks all the observations, combines the ranks from
+both groups, and then compares the sum of ranks between the groups. The
+test is generally considered more robust against outliers and violations
+of normality assumptions.<br />
+<br />
 <strong>[A] Study Hypothesis.</strong><br />
      <strong>[A.1] Null Hypothesis.</strong> There is no difference in
 the median change in diastolic blood pressure readings measured between
@@ -1576,6 +1606,15 @@ Chunk | Output</strong></mark>
 <div id="robust-rank-order-test" class="section level3">
 <h3>1.7.4 Robust Rank-Order Test</h3>
 <div class="line-block"><br />
+<a href="https://www.semanticscholar.org/paper/Robust-Rank-Procedures-for-the-Behrens-Fisher-Fligner-Policello/74d0191c786a1db3387497b32ec7a7352702b571">Robust
+Rank-Order Test</a> is a non-parametric test which is used to determine
+whether the population medians corresponding to two independent samples
+are equal. The test assumes that the populations are symmetric about
+their medians, although the test doesn’t require that the distributions
+have the same shape nor that their variances be equal. It is a robust
+rank-order test of treatment effects for populations which assumes
+neither normality nor equal variances (Behrens-Fisher problem).<br />
+<br />
 <strong>[A] Study Hypothesis.</strong><br />
      <strong>[A.1] Null Hypothesis.</strong> There is no difference in
 the median change in diastolic blood pressure readings measured between
@@ -1707,15 +1746,23 @@ Means in R</a> by Alboukadel Kassambara<br />
 Selva Prabhakaran<br />
 <strong>[Article]</strong> <a href="https://www.real-statistics.com/students-t-distribution/">Student’s
 T Distribution</a> by Charles Zaiontz<br />
+<strong>[Article]</strong> <a href="https://www.statology.org/welchs-t-test/">Welch’s T-test: When to
+Use it + Examples</a> by Statology Team<br />
 <strong>[Publication]</strong> <a href="https://www.semanticscholar.org/paper/THE-PROBABLE-ERROR-OF-A-MEAN-Student/01cd1182a27f503a5935f9f2deb17dc1c8d65856">The
 Probable Error of a Mean</a> by William Gossett (Biometrika)<br />
 <strong>[Publication]</strong> <a href="https://www.semanticscholar.org/paper/The-generalisation-of-student%27s-problems-when-are-Welch/ea0190e9062c66e170a26a2861323010b1e65ec3">The
 Generalisation of Student’s Problems When Several Different Population
 Variances are Involved</a> by Bernard Welch (Biometrika)<br />
+<strong>[Publication]</strong> <a href="https://www.semanticscholar.org/paper/Individual-Comparisons-by-Ranking-Methods-Wilcoxon/59d823fc9877f8d448ac4c2d90e38051026e3201">Individual
+Comparisons by Ranking Methods</a> by Frank Wilcoxon (Biometrika)<br />
 <strong>[Publication]</strong> <a href="https://www.semanticscholar.org/paper/On-a-Test-of-Whether-one-of-Two-Random-Variables-is-Mann-Whitney/60f788264e6278374be9dabd8e2a644cc65129b6">On
 a Test of Whether one of Two Random Variables is Stochastically Larger
 than the Other</a> by Henry Mann and Donald Whitney (Annals of
 Mathematical Statistics)<br />
+<strong>[Publication]</strong> <a href="https://www.semanticscholar.org/paper/Robust-Rank-Procedures-for-the-Behrens-Fisher-Fligner-Policello/74d0191c786a1db3387497b32ec7a7352702b571">Robust
+Rank Procedures for the Behrens-Fisher Problem</a> by Michael Fligner
+and George Policello (Journal of the American Statistical
+Association)<br />
 <br />
 <br />
 <br />
