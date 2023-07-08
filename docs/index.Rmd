@@ -398,19 +398,19 @@ SampleSizePowerCurve.Reshaped <- gather(SampleSizePowerCurve,"Power=70%","Power=
   scale_color_brewer(palette="Paired") +
   scale_x_continuous(name="Hypothesized Diastolic Blood Pressure Change (DBP5-DBP1) for Treatment Group",limits=c(-15,-3),breaks=seq(-15,-3,by=1)) +
   scale_y_continuous(name="Sample Size for Each Treatment Group",limits=c(0,80),breaks=seq(0,80,by=10)) +
-  theme(axis.title.x=element_text(color="black",face="bold",size=20),
+  theme(axis.title.x=element_text(color="black",face="bold",size=12),
         legend.position="top",
         legend.key.size = unit(1,"cm"),
         legend.key.height = unit(1,"cm"), 
         legend.key.width = unit(1,"cm"),
-        legend.title = element_text(size=20,face="bold"), 
-        legend.text = element_text(size=20,face="bold"),
-        text=element_text(size=15),
-        axis.text.y=element_text(color="black",face="bold",hjust=0.25,size=20),
-        axis.text.x=element_text(color="black",face="bold",size=20),
-        axis.title.y=element_text(color="black",face="bold",size=20),
+        legend.title = element_text(size=12), 
+        legend.text = element_text(size=9),
+        text=element_text(size=9),
+        axis.text.y=element_text(color="black",hjust=0.25,size=9),
+        axis.text.x=element_text(color="black",size=9),
+        axis.title.y=element_text(color="black",face="bold",size=12),
         axis.ticks.length=unit(0.25,"cm"),
-        plot.title=element_text(color="black",size=35,face="bold",hjust=0.50)) +
+        plot.title=element_text(color="black",size=14,face="bold",hjust=0.50)) +
   ggtitle("Sample Size Calculations for Different Power and Effect Size"))
 
 ```
@@ -465,19 +465,19 @@ min(DBP.Analysis$DBP5.DBP1.Difference)
   scale_color_manual(values=c("#3259A0","#FF5050")) +
   scale_x_discrete(name="Treatment (TRT)", limits=c("Placebo","New")) +
   scale_y_continuous(name="Diastolic Blood Pressure Change (DBP5-DBP1)",limits=c(-25,5),breaks=seq(-25,5,by=5)) +
-  theme(axis.title.x=element_text(color="black",face="bold",size=20),
+  theme(axis.title.x=element_text(color="black",face="bold",size=12),
         legend.position="top",
         legend.key.size = unit(1,"cm"),
         legend.key.height = unit(1,"cm"), 
         legend.key.width = unit(1,"cm"),
-        legend.title = element_text(size=20,face="bold"), 
-        legend.text = element_text(size=20,face="bold"),
-        text=element_text(size=15),
-        axis.text.y=element_text(color="black",face="bold",hjust=0.25,size=20),
-        axis.text.x=element_text(color="black",face="bold",size=20),
-        axis.title.y=element_text(color="black",face="bold",size=20),
+        legend.title = element_text(size=12), 
+        legend.text = element_text(size=9),
+        text=element_text(size=9),
+        axis.text.y=element_text(color="black",hjust=0.25,size=9),
+        axis.text.x=element_text(color="black",size=9),
+        axis.title.y=element_text(color="black",face="bold",size=12),
         axis.ticks.length=unit(0.25,"cm"),
-        plot.title=element_text(color="black",size=35,face="bold",hjust=0.50)) +
+        plot.title=element_text(color="black",size=14,face="bold",hjust=0.50)) +
    stat_summary(fun=mean, geom="line",color="black",size=2,aes(group=1)) +
    stat_summary(fun=mean, geom="point",color="black",size=5) +
   ggtitle("Data Exploration Between Treatment Groups"))
@@ -547,20 +547,20 @@ ggqqplot(DBP.Analysis,x="DBP5.DBP1.Difference",color="TRT",facet.by="TRT") +
   scale_color_manual(values=c("#3259A0","#FF5050")) +
   scale_y_continuous(name="Observed (DBP5-DBP1)") +
   scale_x_continuous(name="Expected Normal (DBP5-DBP1)") +
-  theme(axis.title.x=element_text(color="black",face="bold",size=20),
+  theme(axis.title.x=element_text(color="black",face="bold",size=12),
         legend.position="top",
         legend.key.size = unit(1,"cm"),
         legend.key.height = unit(1,"cm"), 
         legend.key.width = unit(1,"cm"),
-        legend.title = element_text(size=20,face="bold"), 
-        legend.text = element_text(size=20,face="bold"),
-        text=element_text(size=15),
-        axis.text.y=element_text(color="black",face="bold",hjust=0.25,size=20),
-        axis.text.x=element_text(color="black",face="bold",size=20),
-        axis.title.y=element_text(color="black",face="bold",size=20),
+        legend.title = element_text(size=12), 
+        legend.text = element_text(size=9),
+        text=element_text(size=9),
+        axis.text.y=element_text(color="black",hjust=0.25,size=9),
+        axis.text.x=element_text(color="black",size=9),
+        axis.title.y=element_text(color="black",face="bold",size=12),
         axis.ticks.length=unit(0.25,"cm"),
-        plot.title=element_text(color="black",size=35,face="bold",hjust=0.50),
-        strip.text = element_text(color="black",face="bold",size=20)) +
+        plot.title=element_text(color="black",size=14,face="bold",hjust=0.50),
+        strip.text = element_text(color="black",face="bold",size=12)) +
   ggtitle("QQ-Plot for Normality Assumption Evaluation")
 
 ##################################
