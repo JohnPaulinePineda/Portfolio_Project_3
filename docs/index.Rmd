@@ -1,5 +1,5 @@
 ---
-title: "R : Treatment Comparison Tests Between a Single Factor Variable (2-Level)  and a Single Response Variable (Numeric)"
+title: "Statistical Evaluation : Treatment Comparison Tests Between a Single Factor Variable (2-Level)  and a Single Response Variable (Numeric)"
 author: "John Pauline Pineda"
 date: "April 26, 2022"
 output: 
