@@ -16,7 +16,7 @@ knitr::opts_chunk$set(echo = TRUE, fig.width=15, fig.height=10)
 ```
 # **1. Table of Contents**
 |
-| This project explores the various methods in comparatively evaluating the numeric response data between two treatment groups in a clinical trial using various helpful packages in <mark style="background-color: #CCECFF">**R**</mark>. Statistical tests applied in the analysis included the **Student’s T-Test**, **Welch T-Test**, **Wilcoxon Rank-Sum Test** and **Robust Rank-Order Test**.
+| This project explores the various methods in comparatively evaluating the numeric response data between two treatment groups in a clinical trial using various helpful packages in <mark style="background-color: #CCECFF">**R**</mark>. Statistical tests applied in the analysis included the **Student’s T-Test**, **Welch T-Test**, **Wilcoxon Rank-Sum Test** and **Robust Rank-Order Test**. All results were consolidated in a [<span style="color: #FF0000">**Summary**</span>](#summary) presented at the end of the document.
 |
 | Although clinical trials are conducted with multiple treatment groups, questions of interest are often expressed as pairwise comparisons among the groups. In a clinical trial involving two forms of intervention groups and a baseline may have as its objective the effectiveness of each intervention, and whether the interventions differ in their effectiveness. The statistical methods applied in this study (mostly contained in the <mark style="background-color: #CCECFF">**stats**</mark> and <mark style="background-color: #CCECFF">**trend**</mark> packages) attempt to compare treatment groups in clinical trials given a numeric clinical endpoint.
 |
@@ -120,8 +120,6 @@ PDA <- DBP.Response.Covariate
 </details>
 
 ##  1.2 Data Quality Assessment
-|
-| Data quality assessment:
 |
 | **[A]** No missing observations noted for any response and covariate variable.
 |
@@ -877,8 +875,12 @@ head(DBP.Analysis)
 ```
 
 </details>
-
-# **2. References**
+|
+# **2. Summary** <a name="summary"></a>
+|
+| ![](D:/Github_Codes/ProjectPortfolio/Portfolio_Project_3/docs/Project3_Summary.png)
+|
+# **3. References**
 |
 | **[Book]** [Clinical Trial Data Analysis Using R and SAS](https://www.routledge.com/Clinical-Trial-Data-Analysis-Using-R-and-SAS/Chen-Peace-Zhang/p/book/9780367736217) by Ding-Geng Chen, Karl Peace and Pinggao Zhang
 | **[Book]** [Nonparametric Statistics for the Behavioral Sciences](https://www.semanticscholar.org/paper/Nonparametric-Statistics-for-the-Behavioral-David-Siegel/53b9b242f8cb2007e8e3dd9db5cd11b88fa6c4a7) by Sidney Siegel and John Castellan
