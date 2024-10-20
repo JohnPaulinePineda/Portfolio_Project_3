@@ -1,6 +1,6 @@
 ---
 title: "Statistical Evaluation : Treatment Comparison Tests Between a Single Factor Variable (2-Level)  and a Single Response Variable (Numeric)"
-author: "John Pauline Pineda"
+author: "<b><a href='https://github.com/JohnPaulinePineda'>John Pauline Pineda</a></b>"
 date: "April 26, 2022"
 output: 
   html_document:
@@ -65,14 +65,14 @@ library(ggfortify)
 library(trend)
 
 ##################################
-# Setting the working directory
+# Defining file paths
 ##################################
-setwd("D:/R_Codes/Markdown/ClinicalTrialDataAnalysis")
+DATASETS_PATH <- file.path("datasets")
 
 ##################################
 # Reading and creating the complete dataset
 ##################################
-DBP.Complete <- read.csv('DBP.csv',
+DBP.Complete <- read.csv(file.path("..", DATASETS_PATH, "DBP.csv"),
                 na.strings=c("NA","NaN"," ",""),
                 stringsAsFactors = T)
 
@@ -132,11 +132,6 @@ PDA <- DBP.Response.Covariate
 <details><summary><mark style="background-color: #000000;color: #FFFFFF">**Code Chunk | Output**</mark></summary>
 
 ```{r section_1.2, warning=FALSE, message=FALSE}
-##################################
-# Restoring the working directory
-##################################
-setwd("D:/R_Codes/Markdown/ClinicalTrialDataAnalysis")
-
 ##################################
 # Reusing the response-covariate dataset
 ##################################
@@ -878,7 +873,7 @@ head(DBP.Analysis)
 |
 # **2. Summary** <a name="summary"></a>
 |
-| ![](D:/Github_Codes/ProjectPortfolio/Portfolio_Project_3/docs/Project3_Summary.png)
+| ![](D:/Github_Codes/ProjectPortfolio/Portfolio_Project_3/images/Project3_Summary.png)
 |
 # **3. References**
 |
